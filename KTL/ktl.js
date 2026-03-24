@@ -481,11 +481,12 @@ function logKTL() {
             currentLegacy: data.legacy,
             resetCount: data.resetCount,
             currentMomentum: data.totalMomentum,
+            currentAC: calc_total_ac_worth()
             // currentFear: data.actions.hearAboutTheLich.resource, //not in use
         },
         stage2: null
     });
-    if (data.resetLogs.length > 10) data.resetLogs.shift();
+    if (data.resetLogs.length > 100) data.resetLogs.shift();
     data.ancientCoinGained = 0;
     data.ancientWhisperGained = 0;
     refreshResetLog();
@@ -530,7 +531,8 @@ function renderResetLog() {
                     ${log.stage1.hatlLevel ?? "-"} | 
                     ${log.stage1.mq ? intToString(log.stage1.mq, 1) : "-"} | 
                     ${log.stage1.resonance ?? "-"} | 
-                    ${log.stage1.valor ?? "-"}
+                    ${log.stage1.valor ?? "-"} | 
+                    ${log.stage1.currentAC ?? "-"}
                 </td>
                 <td style="">
                 ${log.stage2 ? `
@@ -545,13 +547,13 @@ function renderResetLog() {
     }
     return `
         <div style="overflow-x:auto">
-            <div style="font-size:20px; font-weight:bold; margin:0 0 6px 0;">Recent Run Statistics (Last 10)</div>
+            <div style="font-size:20px; font-weight:bold; margin:0 0 6px 0;">Recent Run Statistics (Last 100)</div>
             <table style="width:100%;border-collapse:collapse;font-size:16px;white-space:nowrap">
                 <thead>
                     <tr>
                         <th style="padding-right:15px; text-align:left;">#</th>
                         <th style="padding-right:15px; text-align:left;">Stats<br>(Reset | Legacy)</th>
-                        <th style="padding-right:15px; text-align:left;">Stage 1<br>(Momentum | HATL | MQ | Resonance | Valor)</th>
+                        <th style="padding-right:15px; text-align:left;">Stage 1<br>(Momentum | HATL | MQ | Resonance | Valor | AC)</th>
                         <th style="padding-right:15px; text-align:left;">Stage 2<br>(Fight Generated | Legacy Gained |<br> AC Gained | AW Gained)</th>
                     </tr>
                 </thead>

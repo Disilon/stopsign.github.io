@@ -800,8 +800,10 @@ function convertBonusTime() {
 function toggleBonusSpeed() {
     if(data.gameSettings.bonusSpeed > 1 || data.currentGameState.bonusTime <= 1000) {
         data.gameSettings.bonusSpeed = 1;
+        data.gameSettings.ticksPerSecond = 20
     } else {
         data.gameSettings.bonusSpeed = data.options.bonusRate;
+        checkTicksPerSecond();
     }
     updateBonusSpeedButton();
 }
@@ -817,12 +819,24 @@ function updateBonusSpeedButton() {
 }
 
 function changeBonusSpeed(num) {
+    data.options.bonusRate = num;
     if(data.gameSettings.bonusSpeed > 1) { //already running
         data.gameSettings.bonusSpeed = num;
+        checkTicksPerSecond();
     }
-    data.options.bonusRate = num;
 }
 
+function checkTicksPerSecond() {
+    if (data.options.bonusRate > 20) {
+        if (data.options.bonusRate > 100) {
+            data.gameSettings.ticksPerSecond = 1
+        } else {
+            data.gameSettings.ticksPerSecond = 5
+        }
+    } else {
+        data.gameSettings.ticksPerSecond = 20
+    }
+}
 
 function switchToPlane(num) {
     if(!data.planeUnlocked[num]) {

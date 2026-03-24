@@ -37,6 +37,9 @@ function loop() {
         const totalTicksToRun = ticksProcessed * effectiveSpeed;
 
         if (!data.gameSettings.stop) {
+            if (auto_enabled && data.gameState !== "KTL") {
+                cycle_auto();
+            }
             for (let i = 0; i < totalTicksToRun; i++) {
                 didSomething = true;
                 gameTick();

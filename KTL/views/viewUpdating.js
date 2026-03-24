@@ -40,7 +40,7 @@ let views = {
         views.updateVal(`highestLegacyContainer`, data.highestLegacy > 0 ? "" : "none", "style.display");
         views.updateVal(`highestLegacy`, data.highestLegacy, "textContent", 2);
         views.updateVal(`secondsPassed`, data.currentGameState.secondsPassed, "textContent", "time");
-        views.updateVal(`secondsThisLSContainer`, data.lichKills > 0 ? "" : "none", "style.display");
+        views.updateVal(`secondsThisLSContainer`, (data.lichKills > 0 || data.genesisResets > 0) ? "" : "none", "style.display");
         views.updateVal(`secondsThisLS`, data.currentGameState.secondsThisLS, "textContent", "time");
         views.updateVal(`legacyMult`, data.legacyMultKTL, "innerText", 2);
         views.updateVal(`ancientCoinMult`, data.ancientCoinMultKTL * Math.pow(1.05, data.upgrades.extraAncientCoins.upgradePower), "innerText", 2);

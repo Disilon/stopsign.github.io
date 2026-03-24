@@ -110,7 +110,7 @@
     View Amulet Upgrades
 </span>
 
-<span id="currentVersion" style="position:fixed;top:1px;right:5px;color:var(--text-muted)">v3.1.4</span>
+<span id="currentVersion" style="position:fixed;top:1px;right:5px;color:var(--text-muted)">v3.1.4 auto</span>
 
 
 <div id="bonusDisplayShowButton" class="button" onclick="bonusMenuHideButton()"
@@ -120,16 +120,16 @@
 
 <div id="bonusDisplay" style="border:1px solid var(--border-color);position:absolute;display:none;
     flex-direction:row;left:20px;bottom:55px;padding:10px;margin:5px;background-color:var(--overlay-color);color:var(--text-primary);width:auto;">
-    <div style="width:230px;margin-right:10px;display:flex;flex-direction:column;gap:5px;">
+    <div style="width:260px;margin-right:10px;display:flex;flex-direction:column;gap:5px;">
         <span id="bonusDisplayHideButton" class="button" style="position:absolute;left:460px;top:-13px;padding:5px 8px;" onclick="bonusMenuHideButton()"><<</span>
         <div>Bonus Time: <b><span id="bonusTime"></span></b></div>
 
         <div id="toggleBonusSpeedButton" class="button" onclick="toggleBonusSpeed()" style="background-color: red; text-align:center;">Enable Bonus Speed</div>
 
         <div>Bonus Speed:
-            <label><input type="radio" onchange="changeBonusSpeed(3)" name="bonusSpeed" value="3x" checked> 3x</label>
-            <label><input type="radio" onchange="changeBonusSpeed(10)" name="bonusSpeed" value="10x"> 10x</label>
-            <span id="bonus50" style="display:none"><label><input type="radio" onchange="changeBonusSpeed(50)" name="bonusSpeed" value="50x"> 50x</label></span>
+            <label><input type="radio" onchange="changeBonusSpeed(10)" name="bonusSpeed" value="10x" checked> 10x</label>
+            <label><input type="radio" onchange="changeBonusSpeed(100)" name="bonusSpeed" value="100x"> 100x</label>
+            <span id="bonus50"><label><input type="radio" onchange="changeBonusSpeed(400)" name="bonusSpeed" value="400x"> 400x</label></span>
         </div>
     </div>
 
@@ -139,7 +139,7 @@
         <div style="display:flex; justify-content:space-between; gap:2px;">
             <div id="skipTime1" class="button" onclick="skipTime(1)" style="background-color:darkblue;flex:1;text-align:center;font-size:12px;">1 minute</div>
             <div id="skipTime10" class="button" onclick="skipTime(10)" style="background-color:darkblue;flex:1;text-align:center;font-size:12px;">10 minutes</div>
-            <div id="skipTime60" class="button" onclick="skipTime(60)" style="background-color:darkblue;flex:1;text-align:center;font-size:12px;display:none;">60</div>
+            <div id="skipTime60" class="button" onclick="skipTime(60)" style="background-color:darkblue;flex:1;text-align:center;font-size:12px;">60</div>
         </div>
 
         <div id="convertBtn" class="button" onclick="convertBonusTime()" style="background-color: green; text-align:center;">Convert 2 hours</div>
@@ -460,6 +460,7 @@ It continues, capturing fraction ancientCoin of your fleeting soul and sending i
 <script src="upgradeData.js"></script>
 <script src="saveFile.js"></script>
 <script src="saveCorrections.js"></script>
+<script src="automation.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-E10C6H16MH"></script><script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
