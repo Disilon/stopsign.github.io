@@ -83,7 +83,11 @@ function createShopMenu() {
         The game will be balanced without the paid upgrades.<br>
         Exact upgrades and pricing is a WIP.<br>
         <div class="menuSeparator"></div>
-        
+<!--        <span id="shopOutputMessage">Click Refresh to check for recent purchases.</span>-->
+<!--        <button onclick="window.steamAPI.buyItem(100)">Buy 1,000 Soul Coins</button>-->
+<!--        <button onclick="window.steamAPI.buyItem(101)">Buy 2,200 Soul Coins</button>-->
+<!--        <button onclick="window.steamAPI.buyItem(102)">Buy 4,800 Soul Coins</button>-->
+<!--        <button id="refresh-purchases-btn" onclick="requestManualSweep()">Refresh Purchases</button>-->
         
 <!--        <span class="button" onclick="resetRun()">Reset run</span>-->
 <!--        Reset the run and gain offline time equal to the run time. -->
@@ -186,6 +190,9 @@ function createDataMenu() {
         </div>
         <div id="secondsPassedContainer">
             Time Passed, total: <span id="secondsPassed"></span>
+        </div>
+        <div id="secondsThisGRContainer">
+            Time Passed, this Genesis Reset: <span id="secondsThisGR"></span>
         </div>
         <div id="secondsThisLSContainer">
             Time Passed, this Legacy Severance: <span id="secondsThisLS"></span>
@@ -629,7 +636,24 @@ function createChangelogMenu() {
     return Raw.html`
         <div class="menuTitle">Changelog</div>
         <div class="menuSeparator"></div><br>
-        v3.1.4 3/12 (current): <br>
+        v3.1.6 3/25 (current): <br>
+        <ol>
+            <li>Added a LS3 upgrade to record 3rd highest levels</li>
+            <li>Fixed Recognize the Familiarity not reducing unlock costs on Magic and Infusion tabs</li>
+            <li>Hid LS button when it's revealed but you use amulet</li>
+            <li>Merged Disilon's improved statistics patch</li>
+            <li>Added Speed numbers/formula to Stats</li>
+            <li>Slightly modified genesis speed formula to match the intentions of "average progress". This should be a slight buff.</li>
+        </ol><br><br>
+        
+        v3.1.5 3/24: <br>
+        <ol>
+            <li>Statistics graph has been greatly updated (thanks Disilon)</li>
+            <li>View Amulet Upgrades stops disappearing for new saves of v3</li>
+            <li>Fixed 3 genesis upgrades from applying twice (AC, AW, Legacy bonuses)</li>
+        </ol><br><br>
+        
+        v3.1.4 3/12: <br>
         [Gameplay changes]:<br>
         <ol>
             <li>Capped Eastern Monolith levels at 3, after the final lich kill</li>

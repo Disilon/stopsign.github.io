@@ -4,6 +4,10 @@ function saveFileCorrection(saveVersionFromLoad) {
         purchaseAction("overponder")
     }
     //6 -> 7
+    if(data.resetCount >= 1) {
+        data.doneAmulet = true;
+    }
+    data.upgrades.rememberMyMastery.initialCost = 600;
 
     return refundAmount;
 }
@@ -26,6 +30,7 @@ function saveFileCorrectionAfterLoad(saveVersionFromLoad) {
     }
 
     data.atts["impedance"].attBase2 = -1 * data.upgrades.decreaseImpedance.upgradePower;
+
 }
 
 let v2toLoad;

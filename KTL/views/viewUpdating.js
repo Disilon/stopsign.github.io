@@ -40,10 +40,12 @@ let views = {
         views.updateVal(`highestLegacyContainer`, data.highestLegacy > 0 ? "" : "none", "style.display");
         views.updateVal(`highestLegacy`, data.highestLegacy, "textContent", 2);
         views.updateVal(`secondsPassed`, data.currentGameState.secondsPassed, "textContent", "time");
+        views.updateVal(`secondsThisGRContainer`, data.currentGameState.secondsThisGR > 0 ? "" : "none", "style.display");
+        views.updateVal(`secondsThisGR`, data.currentGameState.secondsThisGR, "textContent", "time");
         views.updateVal(`secondsThisLSContainer`, (data.lichKills > 0 || data.genesisResets > 0) ? "" : "none", "style.display");
         views.updateVal(`secondsThisLS`, data.currentGameState.secondsThisLS, "textContent", "time");
-        views.updateVal(`legacyMult`, data.legacyMultKTL, "innerText", 2);
-        views.updateVal(`ancientCoinMult`, data.ancientCoinMultKTL * Math.pow(1.05, data.upgrades.extraAncientCoins.upgradePower), "innerText", 2);
+        views.updateVal(`legacyMult`, data.legacyMultKTL * Math.pow(1.1, data.upgrades.extraLegacy.upgradePower), "innerText", 2);
+        views.updateVal(`ancientCoinMult`, data.ancientCoinMultKTL, "innerText", 2);
 
         views.updateVal(`manaQualityDisplay`, actionData.awakenYourGrimoire.manaQuality() > 0 ? "" : "none", "style.display");
 
@@ -375,7 +377,7 @@ let views = {
         }
 
         if(actionObj.currentMenu === "atts") { //stats menu
-            for(let expAtt of actionObj.expAtts) {
+            for(let expAtt of dataObj.expAtts) {
                 let attVar = expAtt[0];
                 views.updateVal(`${actionVar}_${attVar}AttExpMult`, actionObj[`${attVar}AttExpMult`], "textContent", 3);
             }
@@ -387,10 +389,8 @@ let views = {
                 views.updateVal(`${actionVar}LowestLevel1Container`, actionObj.lowestLevel1Time ? "" : "none", "style.display");
                 views.updateVal(`${actionVar}LowestLevel1Time`, actionObj.lowestLevel1Time, "textContent", "time");
             }
-            // for(let efficiencyAtt of actionObj.efficiencyAtts) {
-            //     let attVar = efficiencyAtt[0];
-            //     views.updateVal(`${actionVar}_${attVar}AttEfficiencyMult`, actionObj[`${attVar}AttEfficiencyMult`], "textContent", 3);
-            // }
+
+            calcAttExpertise(actionVar, true)
         }
 
         if(dataObj.showResourceAdded) {
@@ -721,6 +721,7 @@ function displayLSStuff() {
 
         purchaseAction("stopDarknessRitual") //goes to western monolith
         revealUpgrade("newGamePlus")
+        revealUpgrade("rememberMyMastery")
 
         //lots more max level increases
         //OTTL doesn't consume all of its momentum

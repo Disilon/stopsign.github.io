@@ -93,7 +93,7 @@ function resetGameToBase() {
 
     LSMenuOpen = false;
     views.updateVal("legacySeveranceMenu", "none", "style.display");
-    data.legacyMultKTL = Math.pow(1.1, data.upgrades.extraLegacy.upgradePower);
+    data.legacyMultKTL = 1;
     data.ancientCoinMultKTL = Math.pow(1.05, data.upgrades.extraAncientCoins.upgradePower);
     data.ancientWhisperMultKTL = Math.pow(1.1, data.upgrades.extraAncientWhispers.upgradePower);
 
@@ -115,7 +115,11 @@ function resetGameToBase() {
         }
         for (let attVarObj of dataObj.efficiencyAtts) {
             views.updateVal(`${actionVar}${attVarObj[0]}OutsideContainereff`, "none", "style.display");
-            // views.updateVal(`${actionVar}${attVarObj[0]}InsideContainereff`, "none", "style.display");
+            if(attVarObj[1] > 0) {
+                views.updateVal(`${actionVar}${attVarObj[0]}InsideContainerSpeed1`, "none", "style.display");
+            } else if(attVarObj[1] === 0) {
+                views.updateVal(`${actionVar}${attVarObj[0]}InsideContainerSpeed2`, "none", "style.display");
+            }
         }
         views.updateVal(`${actionVar}UnlockText`, generateUnlockText(actionVar), "innerHTML");
     }
@@ -144,6 +148,7 @@ function genesisReset(forceReset) {
     data.ancientCoin = 0;
     data.ancientWhisper = 0;
     data.currentGameState.secondsThisLS = 0;
+    data.currentGameState.secondsThisGR = 0;
     data.highestLegacy = 0;
 
     clearUpgradesForGenesis()
@@ -718,10 +723,12 @@ function useAmulet() {
     adjustMagicMaxLevels()
     adjustBrythalMaxLevels()
 
+    data.doneAmulet = true;
     data.currentWage = 1;
     data.currentJob = "helpScottWithChores";
     document.getElementById("jobTitle").textContent = data.actions[data.currentJob] ? actionData[data.currentJob].title : data.currentJob;
     document.getElementById("jobWage").textContent = intToString(data.currentWage, 2);
+    document.getElementById("legacySeveranceButton1").style.display = "none";
 
     setSliderUI("overclock", "reflect", data.actions["reflect"].automationOnReveal);
 
@@ -846,7 +853,6 @@ function lich1Text() {
                 <li>Legacy, Ancient Coins, and Ancient Whispers</li>
                 <li>All Attribute, Multiplier, and New Action Upgrades</li>
                 <li>Unlocked actions in Magic and Infusion</li>
-                <li>(New!) The recorded highest levels on actions</li>
                 <li>(New!) The level of Turn The Wheel</li>
             </ul>
 
@@ -858,6 +864,7 @@ function lich1Text() {
                 <li>(New!) All automation settings and custom triggers</li>
                 <li>(New!) The exp and level of Repose Rebounded</li>
                 <li>(New!) Death Energy on Repose Rebounded</li>
+                <li>(New!) The recorded highest levels on actions</li>
             </ul>
 
             (New!) You will gain:
@@ -892,7 +899,6 @@ function lich2Text() {
                 <li>Legacy, Ancient Coins, and Ancient Whispers</li>
                 <li>All Attribute, Multiplier, and New Action Upgrades</li>
                 <li>Unlocked actions in Magic and Infusion</li>
-                <li>The recorded highest levels on actions</li>
                 <li>The level of Turn The Wheel</li>
             </ul>
 
@@ -904,6 +910,7 @@ function lich2Text() {
                 <li>All automation settings and custom triggers</li>
                 <li>The exp and level of Repose Rebounded</li>
                 <li>Death Energy on Repose Rebounded</li>
+                <li>The recorded highest levels on actions</li>
             </ul>
 
             (New!) You will gain:
