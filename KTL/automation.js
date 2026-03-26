@@ -108,7 +108,7 @@ autosetup[0].push({type:"reset", ac:2493, hatl:5, mq:32, hope:-200});
 autosetup[0].push({type:"reset", ac:6200, hatl:9, mq:540, hope:-200, specific:[{name:"increaseMarketCap",lvl:1}] });
 autosetup[0].push({type:"reset", ac:9200, hatl:9, mq:486, hope:-200});
 autosetup[0].push({type:"reset", ac:13200, hatl:8, mq:576, hope:-200});
-autosetup[0].push({type:"reset", ac:19000, hatl:9, mq:1470, hope:-200});
+autosetup[0].push({type:"reset", ac:18500, hatl:9, mq:1470, hope:-200});
 autosetup[0].push({type:"severance", action:"save"});
 
 autosetup[1].push({type:"priority", list:earlypriority});
