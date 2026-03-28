@@ -305,8 +305,11 @@ function updateUIOnLoad() {
         data.gameSettings.bonusSpeed = 1;
          //set it to 3 or set the checked correctly on load
     }
-    data.options.bonusRate = 3;
+    data.options.bonusRate = 10;
     updateBonusSpeedButton();
+    bonusMenuHideButton();
+    statMenuHideButton();
+    toggleLog();
 
 
     for (let actionVar in data.actions) {

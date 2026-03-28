@@ -3,7 +3,7 @@ const earlypriority = {
     refineMyConcentration:110,
     refineMyControl:110,
     refineMyEnergy:110,
-    refineMyIntegration:120,
+    refineMyIntegration:140,
 
     refineMyAmplification:20,
     refineMyPulse:20,
@@ -24,9 +24,9 @@ const earlypriority = {
     refineMyMight:20,
     refineMyNavigation:20,
 
-    refineMyWizardry:20,
-    refineMyArchmagery:20,
-    refineMySpellcraft:20,
+    refineMyWizardry:21,
+    refineMyArchmagery:21,
+    refineMySpellcraft:21,
     refineMyValor:10,
 
     refineMyImpedance:20,
@@ -38,19 +38,22 @@ const earlypriority = {
     listenToThePast:19,
     channelMore:19,
 
-    valueMyBody:55
+    valueMyBody:55,
+    rememberWhatIDid:70,
+    rememberHowIGrew:70,
+    rememberMyMastery:140
 };
 const midpriority = {
     refineMyAwareness:70,
     refineMyConcentration:70,
     refineMyControl:70,
     refineMyEnergy:70,
-    refineMyIntegration:90,
+    refineMyIntegration:100,
 
     refineMyAmplification:20,
     refineMyPulse:20,
     refineMyCycle:20,
-    refineMyResonance:90,
+    refineMyResonance:70,
 
     refineMyAmbition:20,
     refineMyLeverage:20,
@@ -66,9 +69,9 @@ const midpriority = {
     refineMyMight:20,
     refineMyNavigation:20,
 
-    refineMyWizardry:20,
-    refineMyArchmagery:20,
-    refineMySpellcraft:20,
+    refineMyWizardry:21,
+    refineMyArchmagery:21,
+    refineMySpellcraft:21,
     refineMyValor:25,
 
     refineMyImpedance:20,
@@ -82,7 +85,10 @@ const midpriority = {
     increaseMarketCap:19,
 
     increaseInitialInvestment:25,
-    valueMyBody:35
+    valueMyBody:35,
+    rememberWhatIDid:70,
+    rememberHowIGrew:70,
+    rememberMyMastery:140
 };
 let uniquepriority= {
     startALittleQuicker:{base:2},
@@ -109,21 +115,22 @@ autosetup[0].push({type:"reset", ac:6200, hatl:9, mq:540, hope:-200, specific:[{
 autosetup[0].push({type:"reset", ac:9200, hatl:9, mq:486, hope:-200});
 autosetup[0].push({type:"reset", ac:13200, hatl:8, mq:576, hope:-200});
 autosetup[0].push({type:"reset", ac:18500, hatl:9, mq:1470, hope:-200});
-autosetup[0].push({type:"severance", action:"save"});
+autosetup[0].push({type:"severance", action:"stop"});
 
 autosetup[1].push({type:"priority", list:earlypriority});
 autosetup[1].push({type:"reset", ac:0, hatl:1, hope:-100});
-autosetup[1].push({type:"reset", ac:10, hatl:1, legacy:40, hope:-100, save_ac:true});
-autosetup[1].push({type:"reset", ac:20, hatl:2, mq:4, hope:-200});
-autosetup[1].push({type:"reset", ac:110, hatl:2, mq:4, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:2}] });
-autosetup[1].push({type:"reset", ac:170, hatl:3, mq:6, hope:-200});
-autosetup[1].push({type:"reset", ac:1160, hatl:3, mq:6, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:3}] });
-autosetup[1].push({type:"reset", ac:1430, hatl:5, mq:48, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3}] });
-autosetup[1].push({type:"priority", ac:1430, list:midpriority});
-autosetup[1].push({type:"reset", ac:2493, hatl:5, mq:32, hope:-200});
-autosetup[1].push({type:"reset", ac:6200, hatl:9, mq:540, hope:-200, specific:[{name:"increaseMarketCap",lvl:1}] });
-autosetup[1].push({type:"reset", ac:9200, hatl:8, mq:486, hope:-200});
-autosetup[1].push({type:"reset", ac:13200, hatl:8, mq:540, hope:-200});
+autosetup[1].push({type:"reset", ac:3303+10, hatl:1, legacy:40, hope:-100, save_ac:true});
+autosetup[1].push({type:"reset", ac:3303+20, hatl:2, mq:4, hope:-200});
+autosetup[1].push({type:"reset", ac:3303+110, hatl:2, mq:4, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:2}] });
+autosetup[1].push({type:"reset", ac:3303+170, hatl:3, mq:6, hope:-200});
+autosetup[1].push({type:"reset", ac:3303+1160, hatl:3, mq:6, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:3}] });
+autosetup[1].push({type:"reset", ac:3303+1430, hatl:5, mq:48, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3}] });
+autosetup[1].push({type:"priority", ac:3303+1430, list:midpriority});
+autosetup[1].push({type:"reset", ac:3303+2493, hatl:5, mq:32, hope:-200});
+autosetup[1].push({type:"reset", ac:9600, hatl:5, mq:32, hope:-200, specific:[{name:"increaseMarketCap",lvl:1}] });
+autosetup[1].push({type:"reset", ac:11500, hatl:9, mq:576, hope:-200});
+autosetup[1].push({type:"reset", ac:48000, hatl:12, mq:2646, hope:-200});
+autosetup[1].push({type:"severance", action:"save"});
 
 let goal_hatl= 1;
 let goal_mq= 1;
