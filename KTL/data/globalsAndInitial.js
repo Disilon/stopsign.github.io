@@ -16,8 +16,9 @@ let saveName = "KTLsave6"; //Blank if you don't want to save, change name to for
 let data = {};
 data.actions = {};
 data.atts = {};
+
 data.toastStates = []; // array of toast objects: {id, state, element}
-data.planeUnlocked = [true, false, false, false];
+data.planeUnlocked = [true, false, false, false, false];
 data.planeTabSelected = 0;
 data.gameState = "default"; //KTL
 data.totalMomentum = 0;
@@ -30,6 +31,9 @@ data.highestLegacy = 0;
 data.genesisPoints = 0;
 data.genesisResets = 0;
 data.fightGenerated = 0;
+data.soulCoins = 0;
+data.totalBoughtSoulCoins = 0;
+data.totalDailySoulCoins = 0;
 
 
 data.useAmuletButtonShowing = false;
@@ -52,8 +56,10 @@ data.options = {};
 data.options.bonusRate = 3;
 data.lastVisit = Date.now();
 data.queuedReveals = {}
-let chartData = []; // Stores { time: number, value: number, HATL: number, MQ: number }
+data.chartData = []; // Stores { time: number, value: number, HATL: number, MQ: number }
 let graphType = "momentum"; //"momentum" or "magic"
+let hashedKey = "test";
+let mySecret = "test"
 
 // --- Core Settings ---
 data.gameSettings = {
@@ -84,6 +90,8 @@ data.currentGameState = {
     instantTimerCooldown:0,
     secondsPassed: 0,
     secondsThisLS: 0,
+    dailyTimer: 0,
+    dailyCharges: 0
 };
 
 
@@ -98,15 +106,16 @@ let isLoadingEnabled = true; //SET FOR COMMIT
 let loadStaticSaveFile = false; //SET FOR COMMIT
 // let loadStaticSaveFile = true;
 let isSteam = false; //SET FOR COMMIT
-// let isSteam = true; //SET FOR STEAM
+// let isSteam = true; //SET FOR STEAM BUILD
 
 
 data.upgrades = {};
+data.shopUpgrades = {};
 
 
 let isDebug = false; //SET FOR COMMIT
 // let isDebug = true;
-let debugLevel = 100; //to set the rough number of loops. Max: 150
+let debugLevel = 150; //to set the rough number of loops. Max: 150. 1st loop: 46
 function debug() {
     if(!isDebug) {
         return;
@@ -116,6 +125,8 @@ function debug() {
 
 function initializeData() {
     createUpgrades(false);
+    initializeShopData();
+
     createAndLinkNewAttribute("doom", "doom");
     createAndLinkNewAttribute("synthesis", "integration");
     createAndLinkNewAttribute("synthesis", "legacy");
@@ -650,62 +661,6 @@ function initializeData() {
 
     // create("infuseImage", [], .5, 1.5)
 
-
-
     setParents();
     processActionStoriesXML();
-}
-
-function setParents() {
-    for(let actionVar in data.actions) {
-        let dataObj = actionData[actionVar];
-        for(let downstreamVar of dataObj.downstreamVars) {
-            let downstreamDataObj = actionData[downstreamVar];
-            if(downstreamDataObj) {
-                downstreamDataObj.parentVar = actionVar;
-            }
-        }
-    }
-}
-
-let check = 0;
-//Add all action.downstreamVars.forEach(downstreamVar variables to a list
-//Repeat until the list is empty:
-//Get the next in the list, set its realX and realY based on the parents, and add its downstream vars to the list
-function setRealCoordinates(startActionVar) {
-    // Create a queue and start with the given action variable
-    let queue = [startActionVar];
-
-    while (queue.length > 0) {
-        let currentVar = queue.shift();
-        let dataObj = actionData[currentVar];
-        let actionObj = data.actions[currentVar];
-        if(check++ > 2000) {
-            data.gameSettings.stop = 1;
-            console.log("You have an infinite loop on action creation with: " + currentVar);
-            return;
-        }
-
-        if (!dataObj) continue; // If action doesn't exist, skip it
-
-        // Determine realX and realY
-        let parentAction = actionData[dataObj.parentVar];
-        if (dataObj.parentVar && parentAction) {
-            dataObj.realX = parentAction.realX + dataObj.x;
-            dataObj.realY = parentAction.realY + dataObj.y;
-        } else {
-            // This is the top-level action
-            dataObj.realX = dataObj.x;
-            dataObj.realY = dataObj.y;
-        }
-
-        // Add downstream actions to the queue
-        if (dataObj.downstreamVars && dataObj.downstreamVars.length > 0) {
-            dataObj.downstreamVars.forEach(downstreamVar => {
-                if (actionData[downstreamVar]) {
-                    queue.push(downstreamVar);
-                }
-            });
-        }
-    }
 }

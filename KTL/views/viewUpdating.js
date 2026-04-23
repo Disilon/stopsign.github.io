@@ -44,7 +44,10 @@ let views = {
         views.updateVal(`secondsThisGR`, data.currentGameState.secondsThisGR, "textContent", "time");
         views.updateVal(`secondsThisLSContainer`, (data.lichKills > 0 || data.genesisResets > 0) ? "" : "none", "style.display");
         views.updateVal(`secondsThisLS`, data.currentGameState.secondsThisLS, "textContent", "time");
-        views.updateVal(`legacyMult`, data.legacyMultKTL * Math.pow(1.1, data.upgrades.extraLegacy.upgradePower), "innerText", 2);
+        views.updateVal(`legacyMult`, data.legacyMultKTL
+            * Math.pow(1.1, data.upgrades.extraLegacy.upgradePower)
+            * Math.pow(1.5, data.shopUpgrades.extraLegacy.upgradePower)
+            * (data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1), "innerText", 2);
         views.updateVal(`ancientCoinMult`, data.ancientCoinMultKTL, "innerText", 2);
 
         views.updateVal(`manaQualityDisplay`, actionData.awakenYourGrimoire.manaQuality() > 0 ? "" : "none", "style.display");
@@ -53,6 +56,11 @@ let views = {
 
         let shouldShowKTLButton = data.actions.hearAboutTheLich.level >= 1 && data.gameState !== "KTL";
         views.updateVal(`killTheLichMenuButton2`, shouldShowKTLButton?"":"none", "style.display")
+
+        if(isSteam) {
+            let hideShop = data[hashIt("test")] || !data[hashIt(mySecret)]
+            views.updateVal(`shopContainer`, hideShop ? "none" : "", "style.display")
+        }
 
     },
     scheduleUpdate: function(elementId, value, type) {
@@ -424,9 +432,6 @@ let views = {
         if(dataObj.actionPowerBase) { //can be a generator w/o action power
             roundedNumbers.push(["actionPower", 4]);
         }
-        if(actionVar === "hearAboutTheLich") {
-            roundedNumbers.push(["actionPower2", 2]);
-        }
 
         if(actionObj.currentMenu === "atts") {
             roundedNumbers.push(["attReductionEffect", 3]);
@@ -561,6 +566,11 @@ function checkActionsToReveal() {
 }
 
 function updateGlobals() {
+    if (data.currentGameState.bonusTime <= 1000 && data.gameSettings.bonusSpeed > 1) {
+        data.gameSettings.bonusSpeed = 1;
+    }
+    updateBonusSpeedButton();
+
     let totalMometum = 0;
     for(let actionVar in data.actions) {
         let actionObj = data.actions[actionVar];
@@ -595,6 +605,11 @@ function updateGlobals() {
     views.updateVal(`lichCoins2`, data.lichCoins, "textContent", "floor");
     views.updateVal(`genesisPoints`, data.genesisPoints, "textContent", "floor");
     views.updateVal(`genesisResets`, data.genesisResets, "textContent", "floor");
+
+    if(isSteam) {
+        views.updateVal(`momentumGainTimer`, data.shopUpgrades.momentumGainPotion.upgradePower / 1000, "textContent", "time");
+        views.updateVal(`currencyGainTimer`, data.shopUpgrades.currencyGainPotion.upgradePower / 1000, "textContent", "time");
+    }
 }
 
 
@@ -669,18 +684,7 @@ function displayLSStuff() {
 
     modifyMonolithTitles()
 
-    if(!data.lichKills) {
-        return;
-    }
-
-
-    if(data.lichKills >= 1) {
-        revealUpgrade('rememberWhatIDid') //10
-        revealUpgrade('valueMyBody') //15, 150, 1500
-        revealUpgrade('pickUpValuablePlants')
-        revealUpgrade('shapeMyPath') //20
-
-
+    if(data.lichKills >= 1 || data.upgrades.extraDeathEnergy.upgradePower > 0) {
         unveilPlane(0)
         unveilPlane(3)
         revealAction("reposeRebounded")
@@ -690,6 +694,17 @@ function displayLSStuff() {
         unlockAction(data.actions.reposeRebounded);
         unlockAction(data.actions.turnTheWheel);
         unlockAction(data.actions.tidalBurden);
+    }
+
+    if(!data.lichKills) {
+        return;
+    }
+
+    if(data.lichKills >= 1) {
+        revealUpgrade('rememberWhatIDid') //10
+        revealUpgrade('valueMyBody') //15, 150, 1500
+        revealUpgrade('pickUpValuablePlants')
+        revealUpgrade('shapeMyPath') //20
 
         if(data.upgrades.increaseInitialInvestment.upgradePower >= 7) {
             revealUpgrade("findAngelInvestors")
@@ -1146,3 +1161,5 @@ function rebuildTriggerInfo(actionVar) {
 
     triggerInfoContainer.appendChild(infoWrapper);
 }
+
+

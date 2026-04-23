@@ -1,4 +1,5 @@
 let lastRealSecondTime = performance.now();
+let tickResidue = 0; // Stores fractional ticks
 function loop() {
     if (timerId !== null) clearTimeout(timerId);
 
@@ -34,7 +35,10 @@ function loop() {
         lastTickTime += ticksProcessed * tickInterval;
 
         const effectiveSpeed = data.gameSettings.gameSpeed * data.gameSettings.bonusSpeed;
-        const totalTicksToRun = ticksProcessed * effectiveSpeed;
+        const upgradeMultiplier = 1 + (data.shopUpgrades.extraGameSpeed.upgradePower * 0.1);
+        const exactTicks = (ticksProcessed * effectiveSpeed * upgradeMultiplier) + (tickResidue || 0);
+        const totalTicksToRun = Math.floor(exactTicks);
+        tickResidue = exactTicks - totalTicksToRun;
 
         if (!data.gameSettings.stop) {
             if (auto_enabled && data.gameState !== "KTL") {
@@ -52,6 +56,10 @@ function loop() {
                 const processedElapsed = ticksProcessed * tickInterval;
                 const bonusTimeConsumed = processedElapsed * data.gameSettings.gameSpeed * (data.gameSettings.bonusSpeed - 1);
                 data.currentGameState.bonusTime -= bonusTimeConsumed;
+                if (data.currentGameState.bonusTime <= 0) {
+                    data.currentGameState.bonusTime = 0;
+                    data.gameSettings.bonusSpeed = 1;
+                }
             }
         } else {
             data.currentGameState.bonusTime += tickInterval * ticksProcessed;

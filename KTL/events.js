@@ -63,45 +63,6 @@ function adjustBrythalMaxLevels() {
     applyUpgradeEffects()
 }
 
-//because the magic actions load unlocked, they don't re-trigger adding maxing levels
-function adjustMagicMaxLevels() {
-    data.actions.spellResearch.maxLevel = actionData.spellResearch.maxLevel +
-        data.upgrades.valueMyResearch.upgradePower;
-    data.actions.etchTheCircle.maxLevel = 1 +
-        data.actions.chargeInk.level +
-        (data.actions.locateWeakness.unlocked?1:0) +
-        (data.actions.boldenLines.unlocked?1:0) +
-        (data.actions.chargeInk.unlocked?1:0);
-    data.actions.condenseMana.maxLevel = 5 +
-        (data.actions.spinMana.unlocked?5:0)+
-        (data.actions.accelerateManaFlow.unlocked?5:0)+
-        (data.actions.loopTheCircuit.unlocked?5:0);
-    data.actions.infuseTheHide.maxLevel = 1 +
-        (data.actions.boldenLines.unlocked?2:0) +
-        (data.actions.grindPigments.unlocked?2:0);
-    data.actions.castToFail.maxLevel = 0 +
-        (data.actions.overcharge.unlocked?1:0) +
-        (data.actions.overboost.unlocked?1:0) +
-        (data.actions.overponder.unlocked?1:0) +
-        (data.actions.overwork.unlocked?1:0) +
-        (data.actions.overproduce.unlocked?1:0) +
-        (data.actions.overdrive.unlocked?1:0) +
-        (data.actions.overtalk.unlocked?1:0) +
-        (data.actions.overhear.unlocked?1:0) +
-        (data.actions.overhype.unlocked?1:0) +
-        (data.actions.createMounds.unlocked?1:0) +
-        (data.actions.hardenDirt.unlocked?1:0) +
-        (data.actions.shapeDefenses.unlocked?1:0) +
-        (data.actions.mendSmallCracks.unlocked?1:0) +
-        (data.actions.restoreEquipment.unlocked?1:0) +
-        (data.actions.reinforceArmor.unlocked?1:0) +
-        (data.actions.unblemish.unlocked?1:0) +
-        (data.actions.lightHeal.unlocked?1:0) +
-        (data.actions.mendAllWounds.unlocked?1:0) +
-        (data.actions.illuminate.unlocked?1:0) +
-        (data.actions.identifyItem.unlocked?1:0) +
-        (data.actions.detectMagic.unlocked?1:0);
-}
 
 
 function validateInput(fromAction, toAction) {
@@ -736,42 +697,7 @@ function bonusMenuHideButton() {
     }
     resizeStatMenu();
 }
-let isSkipping = false;
 
-//skip [time] minutes
-function skipTime(time) {
-    if (isSkipping) return;
-
-    let ticksToUse = time * 60 * 1000;
-    if(data.currentGameState.instantTime < ticksToUse) {
-        return;
-    }
-
-    isSkipping = true;
-    toggleSkipButtons(true);
-
-    data.currentGameState.instantTime -= ticksToUse;
-
-    setTimeout(() => {
-        let origPause = data.gameSettings.stop;
-        data.gameSettings.stop = false;
-        data.gameSettings.ticksPerSecond = 1;
-
-        for (let i = 0; i < time * 60; i++) {
-            gameTick();
-            secondPassed();
-        }
-
-        data.gameSettings.ticksPerSecond = 20;
-        data.gameSettings.stop = origPause;
-        save();
-
-        setTimeout(() => {
-            isSkipping = false;
-            toggleSkipButtons(false);
-        }, 250);
-    }, 0);
-}
 
 function toggleSkipButtons(disable) {
     const ids = ['skipTime1', 'skipTime10', 'skipTime60'];
@@ -789,8 +715,8 @@ function convertBonusTime() {
     if (btn.innerText.indexOf("Use in") !== -1) return;
 
     let amountToConvert = 0;
-    if (data.currentGameState.bonusTime >= 120 * 60 * 1000) {
-        amountToConvert = 120 * 60 * 1000;
+    if (data.currentGameState.bonusTime >= (2 + data.shopUpgrades.extraInstantTimeConversion.upgradePower) * 60 * 60 * 1000) {
+        amountToConvert = (2 + data.shopUpgrades.extraInstantTimeConversion.upgradePower) * 60 * 60 * 1000;
     } else if(data.currentGameState.bonusTime > 0) {
         amountToConvert = data.currentGameState.bonusTime;
     }
@@ -814,11 +740,11 @@ function toggleBonusSpeed() {
 
 function updateBonusSpeedButton() {
     if(data.gameSettings.bonusSpeed === 1) {
-        document.getElementById("toggleBonusSpeedButton").style.backgroundColor = "red";
-        document.getElementById("toggleBonusSpeedButton").textContent = "Enable Bonus Speed";
+        views.updateVal("toggleBonusSpeedButton", "red", "style.backgroundColor");
+        views.updateVal("toggleBonusSpeedButton", "Enable Bonus Speed", "textContent")
     } else {
-        document.getElementById("toggleBonusSpeedButton").style.backgroundColor = "green";
-        document.getElementById("toggleBonusSpeedButton").textContent = "Disable Bonus Speed";
+        views.updateVal("toggleBonusSpeedButton", "green", "style.backgroundColor");
+        views.updateVal("toggleBonusSpeedButton", "Disable Bonus Speed", "textContent")
     }
 }
 
@@ -880,24 +806,10 @@ function mouseOnActionTouch(event, actionVar) {
     mouseOnAction(actionVar);
 }
 
-
-// function takeDataSnapshot(resourceValue) {
-//     const currentTime = chartData.length > 0 ? chartData[chartData.length - 1].time + 1 : 0;
-//
-//     chartData.push({
-//         time: currentTime,
-//         value: resourceValue
-//     });
-//
-//     if (chartData.length > 500) {
-//         chartData.shift(); // Removes the oldest data point
-//     }
-// }
-
 function takeDataSnapshot(resourceValue, currentTime) {
     if (currentTime <= 1) return;
-    if (chartData.length === 0) {
-        chartData.push({
+    if (data.chartData.length === 0) {
+        data.chartData.push({
             time: currentTime,
             value: resourceValue,
             HATL: data.actions["hearAboutTheLich"].level,
@@ -906,22 +818,22 @@ function takeDataSnapshot(resourceValue, currentTime) {
         return;
     }
 
-    const lastStoredPoint = chartData[chartData.length - 1];
+    const lastStoredPoint = data.chartData[data.chartData.length - 1];
     // if (resourceValue === lastStoredPoint.value) {
     //     return;
     // }
 
     if ((currentTime - lastStoredPoint.time) > (currentTime > 21600 ? 239 : 119)) {
-        chartData.push({
+        data.chartData.push({
             time: currentTime,
-            value: resourceValue,
+            value: resourceValue.toPrecision(4),
             HATL: data.actions["hearAboutTheLich"].level,
             MQ: actionData.awakenYourGrimoire.manaQuality()
         });
     }
 
-    if (chartData.length > 200) {
-        chartData.splice(0, 2);
+    if (data.chartData.length > 200) {
+        data.chartData.splice(0, 2);
     }
 }
 
@@ -931,208 +843,6 @@ function resizeCanvas() {
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
     ctx.scale(dpr, dpr);
-}
-
-function drawChart() {
-    if(selectedMenu !== "statistics") {
-        return;
-    }
-
-    const canvasWidth = canvas.clientWidth;
-    const canvasHeight = canvas.clientHeight;
-    const padding = 50;
-
-    // Clear the canvas and fill with dark background
-    ctx.fillStyle = '#2d3748';
-    ctx.globalAlpha = 1;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    if (chartData.length < 2) {
-        ctx.fillStyle = '#a0aec0'; // Light gray text for placeholder
-        ctx.font = '16px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('Waiting for more data...', canvasWidth / 2, canvasHeight / 2);
-        return;
-    }
-
-    // --- Determine Data Range ---
-    const minTime = chartData[0].time;
-    const maxTime = chartData[chartData.length - 1].time;
-
-    // --- Draw Axes ---
-    ctx.strokeStyle = '#4a5568'; // Subtle gray for axes
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(padding, padding);
-    ctx.lineTo(padding, canvasHeight - padding);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(padding, canvasHeight - padding);
-    ctx.lineTo(canvasWidth - padding, canvasHeight - padding);
-    ctx.stroke();
-
-    ctx.fillStyle = '#a0aec0'; // Light gray for labels
-    ctx.font = '12px sans-serif';
-    ctx.textAlign = 'center';
-    // --- Draw Data Line ---
-    ctx.strokeStyle = '#63b3ed'; // Vibrant, contrasting blue for the line
-    ctx.lineWidth = 3; // Thicker line
-    ctx.lineJoin = 'round'; // Smoother corners
-    ctx.beginPath();
-
-    let lastLabelX = -1000;
-    let lastHATL = 0;
-    if (graphType === "momentum") {
-        const values = chartData.map(d => d.value);
-        const minValue = Math.min(...values);
-        const maxValue = Math.max(...values);
-        for (let i = 0; i < chartData.length; i++) {
-            const dataPoint = chartData[i];
-            const HATL = dataPoint.HATL ? dataPoint.HATL : 0;
-            const x = padding + ((dataPoint.time - minTime) / (maxTime - minTime)) * (canvasWidth - 2 * padding);
-            if ((x - lastLabelX) >= ((canvasWidth - 2 * padding) / 8)) {
-                lastLabelX = x;
-                ctx.fillStyle = '#a0aec0'; // Light gray for labels
-                ctx.font = '12px sans-serif';
-                ctx.fillText(secondsToTime(dataPoint.time), x, canvasHeight - padding + 20);
-            }
-            const logMinValue = Math.log1p(minValue);
-            const logMaxValue = Math.log1p(maxValue);
-            const logValue = Math.log1p(dataPoint.value) - logMinValue;
-            let y = (canvasHeight - padding) - ((logValue / (logMaxValue - logMinValue)) * (canvasHeight - 2 * padding));
-            if (isNaN(y)) y = canvasHeight - padding;
-            if (HATL > 0 && HATL > lastHATL) {
-                lastHATL = HATL;
-                ctx.fillStyle = 'red'; // Light gray for labels
-                ctx.font = '14px sans-serif bold';
-                ctx.fillText(HATL, x, y - 4);
-                if (y < (canvasHeight - padding - 10)) {
-                    ctx.fillStyle = '#a0aec0'; // Light gray for labels
-                    ctx.font = '12px sans-serif';
-                    ctx.fillText(secondsToTime(dataPoint.time), x, y + 18);
-                }
-            }
-            if (i === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-
-        // --- Draw Labels and Grid ---
-        ctx.fillStyle = '#a0aec0'; // Light gray for labels
-        ctx.font = '12px sans-serif';
-        const numYLabels = 5;
-        for (let i = 0; i <= numYLabels; i++) {
-            const yPos = padding + (i / numYLabels) * (canvasHeight - 2 * padding);
-            const labelValue = Math.expm1((Math.log1p(maxValue) - Math.log1p(minValue)) * (1 - (i / numYLabels)) + Math.log1p(minValue));
-            ctx.globalAlpha = 1;
-            ctx.fillText(intToString(labelValue, 1), padding - 20, yPos + 4);
-
-            // Horizontal grid line
-            ctx.strokeStyle = '#4a5568'; // Subtle gray for grid
-            ctx.globalAlpha = 0.25;
-            ctx.beginPath();
-            ctx.moveTo(padding, yPos);
-            ctx.lineTo(canvasWidth - padding, yPos);
-            ctx.stroke();
-        }
-    } else {
-        // Magic Quality graph
-        const values = chartData.map(d => d.MQ);
-        const minValue = Math.min(...values);
-        const maxValue = Math.max(...values);
-        for (let i = 0; i < chartData.length; i++) {
-            const dataPoint = chartData[i];
-            const HATL = dataPoint.HATL ? dataPoint.HATL : 0;
-            const x = padding + ((dataPoint.time - minTime) / (maxTime - minTime)) * (canvasWidth - 2 * padding);
-            if ((x - lastLabelX) >= ((canvasWidth - 2 * padding) / 8)) {
-                lastLabelX = x;
-                ctx.fillStyle = '#a0aec0'; // Light gray for labels
-                ctx.font = '12px sans-serif';
-                ctx.fillText(secondsToTime(dataPoint.time), x, canvasHeight - padding + 20);
-            }
-            let y = (canvasHeight - padding) - ((dataPoint.MQ / maxValue) * (canvasHeight - 2 * padding));
-            if (isNaN(y)) y = canvasHeight - padding;
-            if (HATL > 0 && HATL > lastHATL) {
-                lastHATL = HATL;
-                ctx.fillStyle = 'red'; // Light gray for labels
-                ctx.font = '14px sans-serif bold';
-                ctx.fillText(HATL, x, y - 4);
-                if (y < (canvasHeight - padding - 10)) {
-                    ctx.fillStyle = '#a0aec0'; // Light gray for labels
-                    ctx.font = '12px sans-serif';
-                    ctx.fillText(secondsToTime(dataPoint.time), x, y + 18);
-                }
-            }
-            if (i === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-
-        // --- Draw Labels and Grid ---
-        ctx.fillStyle = '#a0aec0'; // Light gray for labels
-        ctx.font = '12px sans-serif';
-        const numYLabels = 5;
-        for (let i = 0; i <= numYLabels; i++) {
-            const yPos = padding + (i / numYLabels) * (canvasHeight - 2 * padding);
-            const labelValue = (maxValue - minValue) * (1 - (i / numYLabels)) + minValue;
-            ctx.globalAlpha = 1;
-            ctx.fillText(intToString(labelValue, 1), padding - 20, yPos + 4);
-
-            // Horizontal grid line
-            ctx.strokeStyle = '#4a5568'; // Subtle gray for grid
-            ctx.globalAlpha = 0.25;
-            ctx.beginPath();
-            ctx.moveTo(padding, yPos);
-            ctx.lineTo(canvasWidth - padding, yPos);
-            ctx.stroke();
-        }
-    }
-}
-
-function addLogMessage(text, type) {
-    const logContainer = document.getElementById('logContainer');
-    const logMessages = document.getElementById('logMessages');
-    const timestamp = secondsToTime(data.secondsPerReset);
-    let logData = {
-        theVar: text,
-        type: type,
-        timestamp: timestamp
-    }
-    const fullMessage = expandLogMessage(logData);
-    data.currentLog.push(logData);
-    const messageElement = document.createElement('div');
-    messageElement.innerHTML = fullMessage;
-    messageElement.style.padding = '2px 8px';
-    const isScrolledToBottom = logContainer.scrollTop + logContainer.clientHeight >= logContainer.scrollHeight - 10;
-    logMessages.appendChild(messageElement);
-    if(isScrolledToBottom) {
-        logContainer.scrollTop = logContainer.scrollHeight;
-    }
-
-    const logWrapper = document.getElementById('logWrapper');
-    const openLogButton = document.getElementById('openLogButton');
-    if(logWrapper.style.display === 'none') {
-        openLogButton.innerHTML = `<span style="color:yellow">•</span> Open Log`
-    }
-}
-
-function expandLogMessage(logData) {
-    let theVar = logData.theVar;
-    let type = logData.type;
-    let timestamp = logData.timestamp;
-    if(type === "purchaseAction") {
-        let dataObj = actionData[theVar];
-        return `${timestamp}: Permanently unlocked action: ${dataObj.title} in ${getPlaneNameFromNum(dataObj.plane)}`;
-    } else if(type === "unlockAction") {
-        let dataObj = actionData[theVar];
-        let planeName = getPlaneNameFromNum(dataObj.plane);
-        return `${timestamp}: New Action: <span style="font-weight:bold;cursor:pointer;" onclick="actionTitleClicked('${theVar}');">${dataObj.title}</span> in ${planeName}`
-    } else if(type === "purchaseUpgrade") {
-        let upgradeDataObj = upgradeData[theVar];
-        return `${timestamp}: New Upgrade Available: ${upgradeDataObj.title}!`;
-    } else if(type === "info") {
-        return logData.theVar;
-    }
 }
 
 function getPlaneNameFromNum(planeNum) {
@@ -1148,108 +858,153 @@ function getPlaneNameFromNum(planeNum) {
     }
 }
 
-function toggleLog() {
-    const logWrapper = document.getElementById('logWrapper');
-    const openLogButton = document.getElementById('openLogButton');
-    if (logWrapper.style.display === 'none') {
-        logWrapper.style.display = 'block';
-        openLogButton.style.display = 'none';
-    } else {
-        logWrapper.style.display = 'none';
-        openLogButton.style.display = 'block';
+function chooseRandomFocusLines() {
+    for (let focusObj of data.focusSelected) {
+        unhighlightLine(focusObj.borderId, focusObj.lineData);
     }
-}
+    data.focusSelected = [];
 
-function hoverLog() {
-    const openLogButton = document.getElementById('openLogButton');
-    openLogButton.innerHTML = `Open Log`
-}
-
-function clearLog() {
-    const logMessages = document.getElementById('logMessages');
-    logMessages.replaceChildren();
-    data.currentLog = [];
-    const openLogButton = document.getElementById('openLogButton');
-    openLogButton.innerHTML = `Open Log`
-}
-
-function rebuildLog() {
-    clearLog();
-    const logContainer = document.getElementById('logContainer');
-    const logMessages = document.getElementById('logMessages');
-    for (let message of data.currentLog) {
-        const messageElement = document.createElement('div');
-        messageElement.innerHTML = expandLogMessage(message);
-        messageElement.style.padding = '2px 8px';
-        logMessages.appendChild(messageElement);
+    let options = [];
+    let maxPermFocus = data.upgrades.rememberWhatIFocusedOn.upgradePower + 1;
+    for(let actionVar in data.actions) {
+        let actionObj = data.actions[actionVar];
+        let dataObj = actionData[actionVar];
+        if(dataObj.plane === 2 || !actionObj.visible || !actionObj.purchased) {
+            continue;
+        }
+        for (let downstreamVar of dataObj.downstreamVars) {
+            let downstreamObj = data.actions[downstreamVar]
+            let downstreamDataObj = actionData[downstreamVar];
+            if(!downstreamObj.purchased || !downstreamObj.visible || !downstreamDataObj.hasUpstream) {
+                continue;
+            }
+            if(actionObj[downstreamVar+"PermFocusMult"] < maxPermFocus) {
+                options.push({from:actionVar, to:downstreamVar});
+            }
+        }
     }
-    logContainer.scrollTop = logContainer.scrollHeight;
-}
-
-
-function togglePinned() {
-    const pinnedWrapper = document.getElementById('pinnedWrapper');
-    const openPinnedButton = document.getElementById('openPinnedButton');
-    if (pinnedWrapper.style.display === 'none') {
-        pinnedWrapper.style.display = 'block';
-        openPinnedButton.style.display = 'none';
-    } else {
-        pinnedWrapper.style.display = 'none';
-        openPinnedButton.style.display = 'block';
+    let selected = [];
+    for (let i = 0; i < data.maxFocusAllowed && options.length > 0; i++) {
+        let index = Math.floor(Math.random() * options.length);
+        selected.push(options.splice(index, 1)[0]);
     }
-}
-
-function rebuildPinned() {
-    let tempArray = copyArray(data.currentPinned);
-    data.currentPinned = [];
-    for(let actionVar of tempArray) {
-        addPinnedAction(actionVar);
+    for(let select of selected) {
+        let borderId = `${select.from}_${select.to}_Line_Outer`;
+        handleLineClick(borderId, select)
     }
+    updatePermFocusText()
 }
 
-function addPinnedActionClick(event, actionVar) {
-    event.stopPropagation();
-    addPinnedAction(actionVar);
+function chooseLowestFocusLines() {
+    for (let focusObj of data.focusSelected) {
+        unhighlightLine(focusObj.borderId, focusObj.lineData);
+    }
+    data.focusSelected = [];
+
+    let options = [];
+    let maxPermFocus = data.upgrades.rememberWhatIFocusedOn.upgradePower + 1;
+
+    for (let actionVar in data.actions) {
+        let actionObj = data.actions[actionVar];
+        let dataObj = actionData[actionVar];
+        if(dataObj.plane === 2 || !actionObj.visible || !actionObj.purchased) {
+            continue;
+        }
+
+        for (let downstreamVar of dataObj.downstreamVars) {
+            let downstreamObj = data.actions[downstreamVar]
+            let downstreamDataObj = actionData[downstreamVar];
+            if(!downstreamObj.purchased || !downstreamObj.visible || !downstreamDataObj.hasUpstream) {
+                continue;
+            }
+            let val = actionObj[downstreamVar + "PermFocusMult"];
+            if (val < maxPermFocus) {
+                options.push({ from: actionVar, to: downstreamVar, val: val });
+            }
+        }
+    }
+
+    let selected = [];
+    for (let i = 0; i < 4 && options.length > 0; i++) {
+        let lowestIdx = 0;
+        for (let j = 1; j < options.length; j++) {
+            if (options[j].val < options[lowestIdx].val) {
+                lowestIdx = j;
+            }
+        }
+        selected.push(options.splice(lowestIdx, 1)[0]);
+    }
+
+    for (let select of selected) {
+        let borderId = `${select.from}_${select.to}_Line_Outer`;
+        handleLineClick(borderId, select)
+    }
+    updatePermFocusText()
 }
 
-function addPinnedAction(actionVar) {
-    let dataObj = actionData[actionVar];
-    let actionObj = data.actions[actionVar];
-    if(data.currentPinned.indexOf(actionVar) !== -1) {
+
+function applyBonusCode() {
+    const input = document.getElementById("bonusCodeInput");
+    const message = document.getElementById("bonusCodeMessage");
+
+    let code = input.value.trim();
+    if (code.startsWith('"') && code.endsWith('"')) {
+        code = code.slice(1, -1).trim();
+    }
+
+    const bonus = bonusCodes[code];
+
+    if (!bonus) {
+        message.style.color = "red";
+        message.textContent = "Invalid code.";
         return;
     }
-    data.currentPinned.push(actionVar);
 
-    queueCache(`${actionVar}PinnedLevels`)
-    queueCache(`${actionVar}Level3`)
-    queueCache(`${actionVar}MaxLevel3`)
-
-    const messageElement = document.createElement('div');
-    //remove button (X) removes all listeners
-    messageElement.innerHTML = `<span id="${actionVar}PinContainer">
-        [${dataObj.plane+1}]
-        <span id="${actionVar}PinnedLevels">
-            <span style="font-weight:bold;cursor:pointer;" onclick="actionTitleClicked('${actionVar}');">${dataObj.title}</span> 
-            (<span id="${actionVar}Level3"></span>${actionObj.maxLevel >= 0?`/<span id="${actionVar}MaxLevel3"></span>`:""})
-        </span>
-        <span style="border:2px solid #840000;cursor:pointer;" class="mouseoverRed" onclick="removePinnedAction('${actionVar}')">X</span>
-    </span>`;
-    messageElement.style.padding = '2px 8px';
-
-    document.getElementById("pinnedActions").appendChild(messageElement);
-
-    clearCacheQueue();
-}
-
-function removePinnedAction(actionVar) {
-    const pinElement = document.getElementById(`${actionVar}PinContainer`);
-    if (pinElement) {
-        pinElement.parentElement.remove();
-        delete view.cached[actionVar];
+    if (data.gameSettings.redeemedBonusCodes[code]) {
+        message.style.color = "red";
+        message.textContent = "Code already used.";
+        return;
     }
 
-    const index = data.currentPinned.indexOf(actionVar);
-    if (index !== -1) {
-        data.currentPinned.splice(index, 1);
-    }
+    bonus.reward();
+    data.gameSettings.redeemedBonusCodes[code] = true;
+
+    message.style.color = "green";
+    message.textContent = `Success! Bonus applied. ${bonus.message}`;
 }
+
+const bonusCodes = {};
+function addBonusCode(code, rewardFunction, message = "") {
+    const trimmed = code.trim().replace(/^"+|"+$/g, "");
+    bonusCodes[trimmed] = { reward: rewardFunction, message };
+}
+addBonusCode("link", function () {
+    data.currentGameState.bonusTime += 1000 * 60 * 60;
+}, "You received 1 hour of bonus time!");
+
+addBonusCode("gift", function () {
+    data.currentGameState.bonusTime += 1000 * 60 * 60;
+}, "Enjoy this 1-hour gift of bonus time!");
+
+addBonusCode("book", function () {
+    data.currentGameState.bonusTime += 1000 * 60 * 30;
+}, "Thanks for reading! Here’s 30 bonus minutes.");
+
+addBonusCode("sorry!", function () {
+    data.currentGameState.bonusTime += 1000 * 60 * 60 * 12;
+}, "Sorry about that! You’ve received 12 hours of bonus time.");
+
+addBonusCode("trythis1", function () {
+    data.currentGameState.bonusTime += 1000 * 60 * 60 * 24;
+}, "Does this work? You got 24 hours of bonus time.");
+
+
+addBonusCode("loopers", function () {
+    data.currentGameState.bonusTime += 1000 * 60 * 60 * 24;
+}, "Thank you for everything!");
+addBonusCode("squirrel", function () {
+    data.currentGameState.bonusTime += 1000 * 60 * 60 * 10;
+}, "Nuts!");
+addBonusCode("nothing", function () {
+    data.currentGameState.bonusTime += 1000 * 60 * 60;
+}, "There was nothing there - except 1 hour bonus time.");

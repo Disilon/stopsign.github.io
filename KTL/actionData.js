@@ -1,57 +1,3 @@
-function create(actionVar, downstreamVars, x, y) {
-    let dataObj = actionData[actionVar];
-    if (!dataObj) {
-        console.log("Could not find in actionData, " + actionVar);
-        return;
-    }
-    if (!dataObj.resourceName) {
-        dataObj.resourceName = "momentum";
-    }
-    dataObj.creationVersion = dataObj.creationVersion ?? 0;
-    dataObj.x = x * 480;
-    dataObj.y = y * -480;
-    dataObj.actionTriggers = dataObj.actionTriggers ?? [];
-    dataObj.hasUpstream = dataObj.hasUpstream ?? true;
-    if(dataObj.wage > 0) {
-        dataObj.actionTriggers.unshift(["info", "text", "On Level: Increase Wage +50%"]);
-        dataObj.actionTriggers.unshift(["info", "wage", actionVar]);
-    }
-    if (!dataObj.addedInVersion) {
-        dataObj.addedInVersion = 0;
-    }
-    dataObj.title = dataObj.title || decamelizeWithSpace(actionVar);
-    dataObj.blinkDelay = 0;
-    // let title = dataObj.title || decamelizeWithSpace(actionVar); //basicLabor -> Basic Labor
-    createAndLinkNewAction(actionVar, dataObj, downstreamVars);
-}
-
-function attachAttLinks(actionVar) {
-    let dataObj = actionData[actionVar];
-    dataObj.expAtts.forEach(function (expAtt) { //add the action to the stat, to update exp reductions
-        for (let attVar in data.atts) {
-            let att = data.atts[attVar];
-            if (expAtt[0] === att.attVar) {
-                att.linkedActionExpAtts.push(actionVar);
-            }
-        }
-    });
-    dataObj.efficiencyAtts.forEach(function (expertiseAtt) { //add the action to the stat, to update exp reductions
-        for (let attVar in data.atts) {
-            let att = data.atts[attVar];
-            if (expertiseAtt[0] === att.attVar) {
-                att.linkedActionEfficiencyAtts.push(actionVar);
-            }
-        }
-    });
-    dataObj.onLevelAtts.forEach(function (onLevelAtt) { //add the action to the stat, to update exp reductions
-        for (let attVar in data.atts) {
-            let att = data.atts[attVar];
-            if (onLevelAtt[0] === att.attVar) {
-                att.linkedActionOnLevelAtts.push(actionVar);
-            }
-        }
-    });
-}
 
 //==== plane0 ====
 
@@ -104,7 +50,8 @@ let actionData = {
             actionObj.actionPower = actionObj.actionPowerBase *
                 actionObj.actionPowerMult;
             actionObj.resourceToAdd = actionObj.actionPower *
-                actionObj.upgradeMult * spellMult * (actionObj.efficiency / 100);
+                actionObj.upgradeMult * spellMult * (actionObj.efficiency / 100)
+            * (data.shopUpgrades.momentumGainPotion.upgradePower > 0 ? 2 : 1);
             actionObj.showResourceAdded = actionObj.resourceToAdd;
         },
         onLevelCustom: function () {
@@ -345,8 +292,8 @@ let actionData = {
                     }
                 }
             }
-
-            let resourceTaken = actionObj.resource * calcTierMult(this.tier)
+            let consumptionReduction = Math.max(0, 1 - (data.shopUpgrades.focusBarsImproveEfficiency.upgradePower * .25 * actionObj.connectedLines));
+            let resourceTaken = actionObj.resource * calcTierMult(this.tier) * consumptionReduction
 
             if (actionObj.resourceToAdd > 0) {
                 actionObj.resource -= resourceTaken;
@@ -750,7 +697,9 @@ let actionData = {
             //stop consuming from reinvest - it's not amount on reinvest * 1.05, but it's 5% of what's on reinvest
             let actionObj = data.actions.invest;
             actionData.invest.updateMults();
-            let resourceTaken = actionObj.resource * calcTierMult(this.tier);
+
+            let consumptionReduction = Math.max(0, 1 - (data.shopUpgrades.focusBarsImproveEfficiency.upgradePower * .25 * actionObj.connectedLines));
+            let resourceTaken = actionObj.resource * calcTierMult(this.tier) * consumptionReduction;
             if (resourceTaken <= 1) {
                 resourceTaken = 0;
             }
@@ -1093,7 +1042,8 @@ let actionData = {
                 }
             }
 
-            let resourceTaken = actionObj.resource * calcTierMult(this.tier);
+            let consumptionReduction = Math.max(0, 1 - (data.shopUpgrades.focusBarsImproveEfficiency.upgradePower * .25 * actionObj.connectedLines));
+            let resourceTaken = actionObj.resource * calcTierMult(this.tier) * consumptionReduction;
 
             if (actionObj.resourceToAdd > 0) {
                 actionObj.resource -= resourceTaken;
@@ -1211,15 +1161,19 @@ let actionData = {
         ignoreConsume:true,
         onLevelCustom: function () {
             if(data.actions.hearAboutTheLich.level <= 1) {
-                data.ancientCoinMultKTL = Math.pow(1.05, data.upgrades.extraAncientCoins.upgradePower);
+                data.ancientCoinMultKTL = 1
             } else {
-                data.ancientCoinMultKTL = Math.pow(1.5, (data.actions.hearAboutTheLich.level - 1)) * Math.pow(1.05, data.upgrades.extraAncientCoins.upgradePower);
+                data.ancientCoinMultKTL = Math.pow(1.5, (data.actions.hearAboutTheLich.level - 1));
             }
+            data.ancientCoinMultKTL *= Math.pow(1.05, data.upgrades.extraAncientCoins.upgradePower);
+            data.ancientCoinMultKTL *= Math.pow(1.5, data.shopUpgrades.extraAncientCoins.upgradePower);
+            data.ancientCoinMultKTL *= (data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1)
         },
         updateMults: function () {
             let actionObj = data.actions.hearAboutTheLich;
 
             actionObj.resourceToAdd = actionData.hearAboutTheLich.calcFearGain();
+            actionObj.actionPower = actionObj.showResourceAdded; //for visual
             actionObj.resourceIncrease = actionObj.resourceToAdd *
                 data.actions.overclock.progressGain / data.actions.overclock.progressMax;
         },
@@ -1228,6 +1182,7 @@ let actionData = {
             if (actionObj.unlocked) {
                 actionObj.resourceToAdd = actionData.hearAboutTheLich.calcFearGain();
                 actionObj.showResourceAdded = actionObj.resourceToAdd;
+                actionObj.actionPower = actionObj.showResourceAdded; //for visual
                 actionObj.resource += actionObj.resourceToAdd;
             }
         },
@@ -1247,8 +1202,7 @@ let actionData = {
         unlockMessage: {english: "Unlocks when Gossip Around Coffee is level 3."},
         extraInfo: {
             english: Raw.html`This action gains (Total Momentum)^0.25 * (Conversations on Gossip)^0.5 / 1e15 Fear 
-        for each Overclock complete, which is a gain of
-        <span style="font-weight:bold;" id="hearAboutTheLichActionPower2">0</span>. Fear is not consumed.`
+        for each Overclock complete. Fear is not consumed.`
         },
         actionTriggers: [
             ["info", "text", "Overclock additionally generates Fear on this action."],

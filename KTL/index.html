@@ -39,13 +39,16 @@
         <span id="planeContainer3" style="display:none;">
             <span id="lineContainer3"></span>
         </span>
+        <span id="planeContainer4" style="display:none;">
+            <span id="lineContainer4"></span>
+        </span>
     </div>
 </div>
 
 <div id="helpMenuContainer"></div>
 <div style="position:absolute;left:15px;top:21px;padding:0 10px;font-size:14px;color: var(--text-muted);pointer-events: none;">
     <div id="momentumDisplay" style="background-color:var(--overlay-color);">
-        Clock: <span id="secondsPerReset" style="margin-right:5px;color: var(--text-primary);font-weight:bold;"></span>
+        Clock: <span id="secondsPerReset" style="margin-right:5px;color: var(--text-primary);font-weight:bold;"></span><span id="clockSpeedIncreaseContainer" style="display:none;">(x<span id="clockSpeedIncrease" style="font-weight:bold;color: var(--text-primary)"></span>)</span>
         <span id="NWSecondsContainer" style="display:none">NW Clock: <span id="NWSeconds"  style="margin-right:5px;color: var(--text-primary);font-weight:bold;"></span></span>
         Total Momentum: <span id="totalMomentum" style="display:inline-block;color: var(--momentum-color);margin-right:5px;font-weight:bold;">1</span>
     </div>
@@ -117,7 +120,7 @@
     View Amulet Upgrades
 </span>
 
-<span id="currentVersion" style="position:fixed;top:1px;right:5px;color:var(--text-muted)">v3.1.6 auto</span>
+<span id="currentVersion" style="position:fixed;top:1px;right:5px;color:var(--text-muted)">v3.2.4</span>
 
 
 <div id="bonusDisplayShowButton" class="button" onclick="bonusMenuHideButton()"
@@ -127,16 +130,16 @@
 
 <div id="bonusDisplay" style="border:1px solid var(--border-color);position:absolute;display:none;
     flex-direction:row;left:20px;bottom:55px;padding:10px;margin:5px;background-color:var(--overlay-color);color:var(--text-primary);width:auto;">
-    <div style="width:260px;margin-right:10px;display:flex;flex-direction:column;gap:5px;">
-        <span id="bonusDisplayHideButton" class="button" style="position:absolute;left:480px;top:-13px;padding:5px 8px;" onclick="bonusMenuHideButton()"><<</span>
+    <div style="width:230px;margin-right:10px;display:flex;flex-direction:column;gap:5px;">
+        <span id="bonusDisplayHideButton" class="button" style="position:absolute;left:460px;top:-13px;padding:5px 8px;" onclick="bonusMenuHideButton()"><<</span>
         <div>Bonus Time: <b><span id="bonusTime"></span></b></div>
 
         <div id="toggleBonusSpeedButton" class="button" onclick="toggleBonusSpeed()" style="background-color: red; text-align:center;">Enable Bonus Speed</div>
 
         <div>Bonus Speed:
-            <label><input type="radio" onchange="changeBonusSpeed(10)" name="bonusSpeed" value="10x" checked> 10x</label>
-            <label><input type="radio" onchange="changeBonusSpeed(100)" name="bonusSpeed" value="100x"> 100x</label>
-            <span id="bonus50"><label><input type="radio" onchange="changeBonusSpeed(400)" name="bonusSpeed" value="400x"> 400x</label></span>
+            <label><input type="radio" onchange="changeBonusSpeed(3)" name="bonusSpeed" value="3x" checked> 3x</label>
+            <label><input type="radio" onchange="changeBonusSpeed(10)" name="bonusSpeed" value="10x"> 10x</label>
+            <span id="bonus50" style="display:none"><label><input type="radio" onchange="changeBonusSpeed(50)" name="bonusSpeed" value="50x"> 50x</label></span>
         </div>
     </div>
 
@@ -146,7 +149,7 @@
         <div style="display:flex; justify-content:space-between; gap:2px;">
             <div id="skipTime1" class="button" onclick="skipTime(1)" style="background-color:darkblue;flex:1;text-align:center;font-size:12px;">1 minute</div>
             <div id="skipTime10" class="button" onclick="skipTime(10)" style="background-color:darkblue;flex:1;text-align:center;font-size:12px;">10 minutes</div>
-            <div id="skipTime60" class="button" onclick="skipTime(60)" style="background-color:darkblue;flex:1;text-align:center;font-size:12px;">60</div>
+            <div id="skipTime60" class="button" onclick="skipTime(60)" style="background-color:darkblue;flex:1;text-align:center;font-size:12px;display:none;">60 minutes</div>
         </div>
 
         <div id="convertBtn" class="button" onclick="convertBonusTime()" style="background-color: green; text-align:center;">Convert 2 hours</div>
@@ -183,6 +186,11 @@
                 border-bottom:none;border-top-left-radius:10px;border-top-right-radius:10px;
                 display:none;align-items:center;justify-content:center;font-weight:bold;cursor:pointer;width:50%;">
                 Infusion [4]
+            </div>
+            <div id="planeButton4" class="hyperVisible planeButton4" onclick="switchToPlane(4)" style="max-width:200px;height:60px;pointer-events:auto;
+                border-bottom:none;border-top-left-radius:10px;border-top-right-radius:10px;
+                display:none;align-items:center;justify-content:center;font-weight:bold;cursor:pointer;width:50%;">
+                Mirror World [5]
             </div>
         </div>
     </div>
@@ -255,10 +263,14 @@ It continues, capturing fraction ancientCoin of your fleeting soul and sending i
             <ul>
                 <li>All attributes will reset.</li>
                 <li>All Brythal actions will reset.</li>
-                <li>All Magic actions will reset except for the unlock cost.</li>
+                <li>All Magic actions will reset in the same way as Brythal actions, except the unlock cost, which keeps the same between loops.</li>
             </ul><br>
             You currently have: <span id="manaQuality2" style="font-weight:bold;"></span> mana quality.
             <span id="manaQualityErrorMessage" style="display:none;font-weight:bold;color:var(--warning-color)"><br>Doing this action requires mana quality. Check that you have awakened your grimoire!</span>
+            <div id="focusButtonContainer" style="margin-top:15px;margin-bottom:5px;display:none;">
+                <span class="button" id="randomFocusButton" onclick="chooseRandomFocusLines()">Choose Random Non-max Focus Lines</span>
+                <span class="button" id="lowestFocusButton" onclick="chooseLowestFocusLines()">Choose Lowest Mult Focus Lines</span>
+            </div>
             <span id="permFocusMessage" style=""></span>
         </div>
         <input type="checkbox" id="confirmKTL"><label for="confirmKTL">Confirm</label>
@@ -443,6 +455,7 @@ It continues, capturing fraction ancientCoin of your fleeting soul and sending i
 
 
 <script src="https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/decimal.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js"></script>
 <script src="helpers/helpers.js"></script>
 <script src="data/globalsAndInitial.js"></script>
 <script src="driver.js"></script>
@@ -450,25 +463,36 @@ It continues, capturing fraction ancientCoin of your fleeting soul and sending i
 <script src="views/viewHelpers.js"></script>
 <script src="views/viewUpdating.js"></script>
 <script src="saving.js"></script>
+<script src="onLoad.js"></script>
+<script src="actionDataFunctions.js"></script>
 <script src="actionData.js"></script>
 <script src="actionData2.js"></script>
 <script src="actionData3.js"></script>
 <script src="actionData4.js"></script>
 <script src="actionData5.js"></script>
 <script src="events.js"></script>
+<script src="collectData.js"></script>
 <script src="engine.js"></script>
+<script src="attribute.js"></script>
+<script src="automation.js"></script>
 <script src="debugValues.js"></script>
 <script src="helpers/hotkeys.js"></script>
 <script src="helpers/interval2.js"></script>
 <script src="data/textData.js"></script> <!-- must go after actionData-->
 <script src="toasts.js"></script>
 <script src="menu.js"></script>
+<script src="spells.js"></script>
 <script src="ktl.js"></script>
+<script src="upgradeEvents.js"></script>
 <script src="upgradeData.js"></script>
+<script src="upgradeUI.js"></script>
 <script src="saveFile.js"></script>
 <script src="saveCorrections.js"></script>
-<script src="automation.js"></script>
+<script src="store.js"></script>
+<script src="storeData.js"></script>
 <!--<script src="steamStuff.js"></script>-->
+<!--<script src="steamSecrets.js"></script>-->
+<!--<script src="soulCoinsSecrets.js"></script>-->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-E10C6H16MH"></script><script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}

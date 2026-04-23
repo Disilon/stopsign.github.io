@@ -36,8 +36,8 @@ function initializeMenus() {
         document.getElementById("helpForRealMenuTab").style.display = "flex";
     });
 
-        // addMenuTab("cheat");
-    // addMenuTextContainer("cheat", createCheatMenu());
+    addMenuTab("errorLog");
+    addMenuTextContainer("errorLog", createErrorLogMenu());
 }
 
 function statChartInitial() {
@@ -65,35 +65,6 @@ function statChartInitial() {
     });
 }
 
-function createCheatMenu() {
-    return Raw.html`
-        <div class="menuTitle"><s>Cheating</s> Developer Mode</div>
-        <div class="menuSeparator"></div><br>
-        <div class="button" style="width:150px;padding:10px;font-size:16px;" 
-            id="cheatButton" onClick="increaseGamespeed()">x2 Game Speed</div>
-        <div class="button" style="width:150px;padding:10px;font-size:16px;" 
-            onClick="resetGamespeed()">Game Speed = 1</div>`
-}
-
-function createShopMenu() {
-    return Raw.html`
-        <div class="menuTitle">Shop</div>
-        <div class="menuSeparator"></div><br>The shop will be available in the full release.
-        I will keep the game ad-free and AI-art free, and the demo will be remain open-source on my github.<br> 
-        The game will be balanced without the paid upgrades.<br>
-        Exact upgrades and pricing is a WIP.<br>
-        <div class="menuSeparator"></div>
-<!--        <span id="shopOutputMessage">Click Refresh to check for recent purchases.</span>-->
-<!--        <button onclick="window.steamAPI.buyItem(100)">Buy 1,000 Soul Coins</button>-->
-<!--        <button onclick="window.steamAPI.buyItem(101)">Buy 2,200 Soul Coins</button>-->
-<!--        <button onclick="window.steamAPI.buyItem(102)">Buy 4,800 Soul Coins</button>-->
-<!--        <button id="refresh-purchases-btn" onclick="requestManualSweep()">Refresh Purchases</button>-->
-        
-<!--        <span class="button" onclick="resetRun()">Reset run</span>-->
-<!--        Reset the run and gain offline time equal to the run time. -->
-        
-`;
-}
 
 function createHelpForRealMenu() {
     return Raw.html`
@@ -175,6 +146,8 @@ function createStoryMenu() {
 &nbsp;&nbsp;&nbsp;&nbsp;I started doing chores I didn't need to - piling up more firewood, cleaning my clothes more often, carving wood into furniture and decorations. For a while it lasted, but I was finishing my fourth pile of firewood when I realized I had more than I reasonably could use for the entire winter, and reconsidered what I was doing. I let myself think about why I was pushing things out. I let myself think about who I wanted to be, and I realized I would need to think about who I was. I considered changing Overclock's target to continue avoiding the subject, but I felt instant terror at the idea that I would be without safety - the same as any other soldier in the Ashmarch.<br><br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;As I finally made that connection, I realized that the only way forward was through. And so, after putting it off as long as possible, I stopped. I sat on the floor. I breathed. I let it in, and reflected.<br><br>
+
+(Use bonus code "book" for 30 minutes of bonus time!)
 `
 }
 
@@ -631,12 +604,42 @@ function addDataTab() {
     addMenuTab("statistics");
 }
 
+function createErrorLogMenu() {
+    return `<div class="menuTitle">Certain errors will show here:</div>
+    <div class="menuSeparator"></div>
+    <div id="errorLogContainer"></div>
+    <br/>`
+}
+
 //Also update id="currentVersion"
 function createChangelogMenu() {
     return Raw.html`
         <div class="menuTitle">Changelog</div>
         <div class="menuSeparator"></div><br>
-        v3.1.6 3/25 (current): <br>
+        v3.2.4 4/14 (current): <br>
+        <ol>
+            <li>Ancient Whisper mult is saved - will come back on page refresh</li>
+            <li>Removed the "undefined" from certain action's stat pages</li>
+            <li>Perm focus gain text will clear after genesis</li>
+            <li>Prepared the game for steam, including daily bonus and shop that only appears on steam</li>
+            <li>3.2.1 Fixed store</li>
+            <li>3.2.2 Fixed Infusion not appearing with a NG+ upgrade</li>
+            <li>3.2.3 Fixed bonus speed button not disabling on empty</li>
+            <li>3.2.3 Added an Error Log menu for steam errors</li>
+            <li>3.2.4 Fixed an offline bug with a paid upgrade</li>
+            <li>3.2.4 Corrected the description of the "gifts" bonus from 24hr to 1hr</li>
+        </ol><br><br>
+        
+        v3.1.7 3/31: <br>
+        <ol>
+            <li>Resource retrieval now works for some actions it didn't, like Cast to Fail</li>
+            <li>LS records highest levels also now</li>
+            <li>Fixed HATL Stats displaying wrong value</li>
+            <li>Fixed Find Angel Investors not working</li>
+            <li>Savefile size has been reduced by more than 10x (thanks Disilon)</li>
+        </ol><br><br>
+        
+        v3.1.6 3/25: <br>
         <ol>
             <li>Added a LS3 upgrade to record 3rd highest levels</li>
             <li>Fixed Recognize the Familiarity not reducing unlock costs on Magic and Infusion tabs</li>

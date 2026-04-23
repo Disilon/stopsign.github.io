@@ -6,7 +6,9 @@ function loadDebugValues() {
     debug1stKill()
     debug2ndKill()
     debug3rdKill()
-
+    
+    checkShopUnlocks()
+    refreshShopUpgrades()
 
     debugAfterCare()
 
@@ -1294,9 +1296,9 @@ function debugAfterCare() {
             continue;
         }
 
-        for (let downstreamVar of dataObj.downstreamVars) {
-            actionObj[`${downstreamVar}PermFocusMult`] = 4;
-        }
+        // for (let downstreamVar of dataObj.downstreamVars) {
+        //     actionObj[`${downstreamVar}PermFocusMult`] = 4;
+        // }
     }
 
     for (let actionVar in data.actions) {
@@ -1315,5 +1317,6 @@ function debugAfterCare() {
         unveilPlane(1);
         unveilPlane(2);
         unveilPlane(3);
+        unveilPlane(4);
     }
 }
