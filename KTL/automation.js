@@ -1,328 +1,343 @@
-const earlypriority = {
-    refineMyAwareness:110,
-    refineMyConcentration:110,
-    refineMyControl:110,
-    refineMyEnergy:110,
-    refineMyIntegration:140,
 
-    refineMyAmplification:20,
-    refineMyPulse:20,
-    refineMyCycle:20,
-    refineMyResonance:90,
-
-    refineMyAmbition:20,
-    refineMyLeverage:20,
-    refineMySavvy:20,
-    refineMyVision:20,
-
-    refineMyInfluence:20,
-    refineMyConfidence:20,
-    refineMyCharm:20,
-
-    refineMyObservation:20,
-    refineMyEndurance:20,
-    refineMyMight:20,
-    refineMyNavigation:20,
-
-    refineMyWizardry:21,
-    refineMyArchmagery:21,
-    refineMySpellcraft:21,
-    refineMyValor:10,
-
-    refineMyImpedance:20,
-
-    haveBetterIceBreakers:19,
-    extractMyWorth:19,
-    glimpseTheWeave:11,
-    increaseMyPace:40,
-    listenToThePast:19,
-    channelMore:19,
-
-    valueMyBody:55,
-    rememberWhatIDid:70,
-    rememberHowIGrew:70,
-    rememberMyMastery:140
-};
-const midpriority = {
-    refineMyAwareness:70,
-    refineMyConcentration:70,
-    refineMyControl:70,
-    refineMyEnergy:70,
-    refineMyIntegration:100,
-
-    refineMyAmplification:20,
-    refineMyPulse:20,
-    refineMyCycle:20,
-    refineMyResonance:70,
-
-    refineMyAmbition:20,
-    refineMyLeverage:20,
-    refineMySavvy:20,
-    refineMyVision:20,
-
-    refineMyInfluence:20,
-    refineMyConfidence:20,
-    refineMyCharm:20,
-
-    refineMyObservation:20,
-    refineMyEndurance:20,
-    refineMyMight:20,
-    refineMyNavigation:20,
-
-    refineMyWizardry:21,
-    refineMyArchmagery:21,
-    refineMySpellcraft:21,
-    refineMyValor:25,
-
-    refineMyImpedance:20,
-
-    haveBetterIceBreakers:19,
-    extractMyWorth:19,
-    glimpseTheWeave:11,
-    increaseMyPace:40,
-    listenToThePast:19,
-    channelMore:19,
-    increaseMarketCap:19,
-
-    increaseInitialInvestment:25,
-    valueMyBody:35,
-    rememberWhatIDid:70,
-    rememberHowIGrew:70,
-    rememberMyMastery:140
-};
-let uniquepriority= {
-    startALittleQuicker:{base:2},
-    pickUpValuablePlants:{base:10},
-    startCasualChats:{base:10},
-    learnToFocusMore:{base:1},
-    rememberWhatIFocusedOn:{base:1},
-    increaseInitialInvestment:{base:100},
-    findAngelInvestors:{base:100},
-    retrieveMyUnusedResources:{base:15}
-};
-let autosetup = [[],[],[],[]];
-autosetup[0].push({type:"priority", list:earlypriority});
-autosetup[0].push({type:"reset", ac:0, hatl:1, hope:-100});
-autosetup[0].push({type:"reset", ac:10, hatl:1, legacy:40, hope:-100, save_ac:true});
-autosetup[0].push({type:"reset", ac:20, hatl:2, mq:4, hope:-200});
-autosetup[0].push({type:"reset", ac:110, hatl:2, mq:4, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:2}] });
-autosetup[0].push({type:"reset", ac:170, hatl:3, mq:6, hope:-200});
-autosetup[0].push({type:"reset", ac:1340, hatl:3, mq:6, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:3}] });
-autosetup[0].push({type:"reset", ac:1520, hatl:5, mq:48, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3}] });
-autosetup[0].push({type:"priority", ac:1520, list:midpriority});
-autosetup[0].push({type:"reset", ac:2493, hatl:5, mq:32, hope:-200});
-autosetup[0].push({type:"reset", ac:6200, hatl:9, mq:540, hope:-200, specific:[{name:"increaseMarketCap",lvl:1}] });
-autosetup[0].push({type:"reset", ac:9200, hatl:9, mq:486, hope:-200});
-autosetup[0].push({type:"reset", ac:13200, hatl:8, mq:576, hope:-200});
-autosetup[0].push({type:"reset", ac:18500, hatl:9, mq:1470, hope:-200});
-autosetup[0].push({type:"severance", action:"stop"});
-
-autosetup[1].push({type:"priority", list:earlypriority});
-autosetup[1].push({type:"reset", ac:0, hatl:1, hope:-100});
-autosetup[1].push({type:"reset", ac:3303+10, hatl:1, legacy:40, hope:-100, save_ac:true});
-autosetup[1].push({type:"reset", ac:3303+20, hatl:2, mq:4, hope:-200});
-autosetup[1].push({type:"reset", ac:3303+110, hatl:2, mq:4, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:2}] });
-autosetup[1].push({type:"reset", ac:3303+170, hatl:3, mq:6, hope:-200});
-autosetup[1].push({type:"reset", ac:3303+1160, hatl:3, mq:6, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:3}] });
-autosetup[1].push({type:"reset", ac:3303+1430, hatl:5, mq:48, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3}] });
-autosetup[1].push({type:"priority", ac:3303+1430, list:midpriority});
-autosetup[1].push({type:"reset", ac:3303+2493, hatl:5, mq:32, hope:-200});
-autosetup[1].push({type:"reset", ac:9600, hatl:5, mq:32, hope:-200, specific:[{name:"increaseMarketCap",lvl:1}] });
-autosetup[1].push({type:"reset", ac:11500, hatl:9, mq:576, hope:-200});
-autosetup[1].push({type:"reset", ac:48000, hatl:12, mq:2646, hope:-200});
-autosetup[1].push({type:"severance", action:"save"});
-
-let goal_hatl= 1;
-let goal_mq= 1;
-let goal_hope= -100;
-let goal_legacy= 0;
-let save_ac= false;
-let save_aw= false;
-let upgrade_priority= {};
-let specific_upgrades= [];
-let severance= "stop";
-let auto_enabled= true;
-
-function cycle_auto() {
-    let current_ac = calc_total_ac_worth();
-    for (let i = 0; i < autosetup[data.lichKills].length; i++) {
-        let auto = autosetup[data.lichKills][i];
-        if (auto.ac === undefined) {
-            auto.ac = 0;
-        }
-        if (auto.legacy === undefined) {
-            auto.legacy = 0;
-        }
-        if (auto.mq === undefined) {
-            auto.mq = 1;
-        }
-        if (auto.save_ac === undefined) {
-            auto.save_ac = false;
-        }
-        if (auto.save_aw === undefined) {
-            auto.save_aw = false;
-        }
-        if (current_ac >= auto.ac) {
-            if (auto.type === "priority") {
-                upgrade_priority = {};
-                for (let key in auto.list) {
-                    upgrade_priority[key] = {base:auto.list[key]};
-                }
-            }
-            if (auto.type === "reset") {
-                goal_hatl = auto.hatl;
-                goal_mq = auto.mq;
-                goal_hope = auto.hope;
-                goal_legacy = auto.legacy;
-                save_ac = auto.save_ac;
-                save_aw = auto.save_aw;
-                if (auto.specific !== undefined) {
-                    specific_upgrades = auto.specific;
-                }
-            }
-            if (auto.type === "severance") {
-                severance = auto.action;
-
-            }
-        }
+//Handling automationOnReveal behavior - thanks obliv for the algorithm
+//Triggered when action is revealed, max level increased, or level decreased (charges used)
+function enableAutomationUpwards(actionVar, isForced) {
+    if(data.upgrades.stopLettingOpportunityWait.upgradePower === 0 || actionData[actionVar].plane === 2) {
+        return;
     }
-    if (data.upgrades["keepUnlockedCount"].upgradesBought > 0) {
-        upgrade_priority.recognizeTheFamiliarity = {base:75};
-    } else {
-        upgrade_priority.recognizeTheFamiliarity = {base:25};
+
+    //If target node’s “enable” automation slider is off, or if the node is being revealed for the very first time ever, then do nothing.
+    //This is not part of the loop. We don’t check the slider for any upstream actions.
+    if(!isForced && (data.actions[actionVar].automationOnReveal === 0 || !data.actions[actionVar].hasBeenUnlocked)) {
+        return;
+    }
+
+    let currentTarget = actionVar;
+    //Start of loop. If target node is a root node (Overclock, Pool Mana), then break the loop.
+    while(actionData[currentTarget].hasUpstream || actionData[currentTarget].keepParentAutomation) {
+        let actionObj = data.actions[currentTarget];
+        let dataObj = actionData[currentTarget];
+
+        let parentVar = dataObj.parentVar;
+        let parentObj = data.actions[parentVar];
+
+        //If the slider from the upstream node is exactly zero, then update it to the automation default value. Use the current target node’s Temper My Desires slider if unlocked and not zero. Otherwise, it’s a fixed 50% or 100% based on amulet perks.
+        if(dataObj.hasUpstream && parentObj[`downstreamRate${currentTarget}`] === 0) {
+            setSliderUI(parentVar, currentTarget, isForced?100:actionObj.automationOnReveal)
+        }
+
+        //Change target node to the upstream node (where the send slider may have changed). Loop again
+        currentTarget = parentVar
     }
 }
 
-function automate() {
-    if (data.gameState === "KTL") {
-        if (document.getElementById("legacySeveranceButton1").style.display === "") {
-            if (severance === "save") {
-                update_priority(uniquepriority);
-                buy_ac_upgrades(uniquepriority);
-                exportSaveFile("KTL_LS_" + data.lichKills);
-                legacySeveranceReset(true);
-                changeBonusSpeed(400);
-            } else {
-                auto_enabled = false;
-                pauseGame();
-            }
+//Handling automationCanDisable behavior - thanks obliv for the algorithm
+//Triggered when an action reaches max level.
+function disableAutomationUpwards(actionVar, isForced) {
+    if(data.upgrades.knowWhenToMoveOn.upgradePower === 0 || actionData[actionVar].plane === 2) {
+        return;
+    }
+
+    if(isForced) {
+        if(actionData[actionVar].hasUpstream) {
+            setSliderUI(actionData[actionVar].parentVar, actionVar, 0);
+        }
+        if(actionData[actionVar].hasUpstream || actionData[actionVar].keepParentAutomation) {
+            disableAutomationUpwards(actionData[actionVar].parentVar)
+        }
+    }
+
+    let currentTarget = actionVar;
+    //Start of loop. If target is a root node (Overclock, Pool Mana) then stop the loop.
+    while(actionData[currentTarget].hasUpstream || actionData[currentTarget].keepParentAutomation) {
+        let actionObj = data.actions[currentTarget];
+        let dataObj = actionData[currentTarget];
+
+        //If the automation slider to disable the target node at max level is disabled, then stop the loop.
+        if (!actionObj.automationCanDisable) {
             return;
         }
-        if (data.atts.hope.num <= goal_hope) {
-            for (let specific of specific_upgrades) {
-                buy_specific_upgrade(specific.name, specific.lvl);
-            }
-            if (!save_aw) {
-                buy_aw_upgrades();
-            }
-            upgrade_priority = update_priority(upgrade_priority);
-            if (!save_ac) {
-                buy_ac_upgrades(upgrade_priority);
-            }
-            cycle_auto();
-            if (!data.gameSettings.stop) {
-                document.getElementById('amuletConfirm').checked = true;
-                console.log("Amulet reset:" + data.resetCount);
-                useAmulet();
-                changeBonusSpeed(400);
-            }
-        }
-    } else {
-        if (data.actions.hearAboutTheLich.level >= goal_hatl && actionData.awakenYourGrimoire.manaQuality() >= goal_mq) {
-            if (data.legacy >= goal_legacy) {
-                changeBonusSpeed(100);
-                initializeKTL(true);
-            }
-        }
-    }
-}
 
-function buy_ac_upgrades(list) {
-    while (find_next_ac_upgrade(list, true) !== undefined) {
-        const name = find_next_ac_upgrade(list, true);
-        console.log(name);
-        buyUpgrade(name);
-        list = update_priority(list, name);
-    }
-}
+        //If the automation slider to disable the target node at max level is disabled, then stop the loop.
+        const hasMaxLevel = actionObj.maxLevel !== undefined;
+        if (hasMaxLevel && !actionObj.automationCanDisable) {
+            return;
+        }
 
-function find_next_ac_upgrade(list, save_for_prio) {
-    let max_prio = 0;
-    let upgrade_name;
-    for (let key in list) {
-        if (data.upgrades[key].visible) {
-            if (!data.upgrades[key].isFullyBought) {
-                const cost = calcUpgradeCost(key, data.upgrades[key].upgradesBought);
-                const prio = list[key].prio;
-                if (prio > max_prio && (save_for_prio || canAffordUpgrade("ac", cost))) {
-                    max_prio = prio;
-                    upgrade_name = key;
+        //If this node has a max level but has not yet reached it, then stop the loop.
+        if (hasMaxLevel && actionObj.level < actionObj.maxLevel) {
+            return;
+        }
+
+        //If the upstream send rate slider is already 0%, then stop the loop.
+        let parentVar = dataObj.parentVar;
+        if (dataObj.hasUpstream && data.actions[parentVar][`downstreamRate${currentTarget}`] === 0) {
+            return;
+        }
+
+        for (const downstreamVar of dataObj.downstreamVars) {
+            const downstreamObj = data.actions[downstreamVar];
+            let downstreamDataObj = actionData[downstreamVar];
+            if(!downstreamObj) {
+                console.log(`error on downstream ${downstreamVar} of ${currentTarget}`)
+            }
+
+            if (!downstreamObj.visible) {
+                continue;
+            }
+            if (downstreamDataObj.keepParentAutomation) {
+                const hasMaxLevel = downstreamObj.maxLevel !== undefined;
+                // If downstream target has been prohibited from being disabled then stop the loop.
+                if (hasMaxLevel && !downstreamObj.automationCanDisable) {
+                    return;
+                }
+                // If downstream target is an action with a maximum level that isn't at level cap then stop the loop.
+                if (!isForced && hasMaxLevel && downstreamObj.level < downstreamObj.maxLevel) {
+                    return;
                 }
             }
+            //If target has ANY enabled downstream path (slider set to a nonzero value), then stop the loop.
+            else if (actionObj[`downstreamRate${downstreamVar}`] > 0) {
+                return;
+            }
         }
+
+        // All checks passed. Set the send rate slider from the upstream node to 0%.
+        if(dataObj.hasUpstream) {
+            setSliderUI(dataObj.parentVar, currentTarget, 0);
+        }
+
+        // Change the target node to the upstream node (the one whose downstream slider we just changed) and go to 2.
+        currentTarget = dataObj.parentVar;
     }
-    if (upgrade_name === undefined) {
-        return undefined;
-    }
-    const cost = calcUpgradeCost(upgrade_name, data.upgrades[upgrade_name].upgradesBought);
-    if (save_for_prio && !canAffordUpgrade("ac", cost)) {
-        return undefined;
-    }
-    return upgrade_name;
 }
 
-function update_priority(list, name) {
-    if (name === undefined) {
-        for (let key in list) {
-            let cost = calcUpgradeCost(key, data.upgrades[key].upgradesBought);
-            list[key].prio = list[key].base / cost;
+
+
+
+function calcTimeToUnlock(actionVar) {
+
+}
+
+function calcTimeToLevel(actionObj) {
+    let timeToFinishCurrentCycle = (actionObj.progressMax - actionObj.progress) / actionObj.progressGain;
+    let expAfterCurrentCycle = actionObj.exp + actionObj.expToAdd;
+    let remainingExpNeeded = Math.max(0, actionObj.expToLevel - expAfterCurrentCycle);
+    let fullCyclesNeeded = Math.ceil(remainingExpNeeded / actionObj.expToAdd);
+    let timePerFullCycle = actionObj.progressMax / actionObj.progressGain;
+    return timeToFinishCurrentCycle + (fullCyclesNeeded * timePerFullCycle);
+}
+function calcTimeToMax(actionVar) {
+    let actionObj = data.actions[actionVar];
+
+    // 1. Sanitize Milestones
+    // Filter invalid (-1), past, or out-of-bounds milestones
+    let rawMilestones = [
+        actionObj.thirdHighestLevel,
+        actionObj.secondHighestLevel,
+        actionObj.highestLevel
+    ];
+
+    let milestones = rawMilestones
+        .filter(m => m > actionObj.level && m < actionObj.maxLevel)
+        .sort((a, b) => a - b);
+
+    // Always finish at maxLevel
+    milestones.push(actionObj.maxLevel);
+    milestones = [...new Set(milestones)];
+
+    // 2. Setup Simulation Variables
+    let totalTime = 0;
+
+    let vLevel = actionObj.level;
+    let vExp = actionObj.exp;
+    let vProgress = actionObj.progress;
+    let vProgressMax = actionObj.progressMax;
+    let vExpToLevel = actionObj.expToLevel;
+
+    // 3. Loop through stages
+    for (let targetLevel of milestones) {
+        let levelsToJump = targetLevel - vLevel;
+        if (levelsToJump <= 0) continue;
+
+        let expMult = calcUpgradeMultToExp(actionVar, vLevel);
+
+        let baseExp = actionObj.expToAddBase !== undefined ? actionObj.expToAddBase : (actionObj.expToAdd / actionObj.expToAddMult);
+        let effectiveExpAdd = baseExp * expMult;
+
+        // A. Time for the VERY NEXT level (handles partial progress)
+        let t1 = getTimeForSingleLevel(
+            vProgress, vProgressMax,
+            vExp, vExpToLevel,
+            effectiveExpAdd, actionObj.progressGain,
+            actionObj.isGenerator
+        );
+        totalTime += t1;
+
+        if (!isFinite(totalTime)) return Infinity;
+
+        // B. Geometric Series for the REST of the levels in this stage
+        let remainingLevels = levelsToJump - 1;
+
+        if (remainingLevels > 0) {
+            let rp = actionObj.progressMaxIncrease;
+            let re = actionObj.expToLevelIncrease;
+            let R = rp * re;
+
+            // Scale up for the start of the series (Level + 1)
+            let nextPMax = vProgressMax * rp;
+            let nextEToL = vExpToLevel * re;
+
+            let completionsNeeded = actionObj.isGenerator
+                ? nextEToL / effectiveExpAdd
+                : Math.ceil(nextEToL / effectiveExpAdd);
+
+            let timePerBar = nextPMax / actionObj.progressGain;
+            let a = completionsNeeded * timePerBar;
+
+            let timeForSeries = 0;
+            if (R === 1) {
+                timeForSeries = a * remainingLevels;
+            } else {
+                let geometricTerm = Math.pow(R, remainingLevels);
+                if (!isFinite(geometricTerm)) return Infinity;
+                timeForSeries = a * (geometricTerm - 1) / (R - 1);
+            }
+            totalTime += timeForSeries;
         }
+
+        // C. Update Virtual State for next stage
+        let scaleFactorP = Math.pow(actionObj.progressMaxIncrease, levelsToJump);
+        let scaleFactorE = Math.pow(actionObj.expToLevelIncrease, levelsToJump);
+
+        vProgressMax *= scaleFactorP;
+        vExpToLevel *= scaleFactorE;
+        vLevel = targetLevel;
+        vProgress = 0;
+        vExp = 0;
+    }
+
+    return totalTime;
+}
+
+function getTimeForSingleLevel(progress, pMax, exp, eToLevel, eAdd, pGain, isGenerator) {
+    let timeToFinishBar = (pMax - progress) / pGain;
+
+    let expAfterBar = exp + eAdd;
+    let expRemaining = Math.max(0, eToLevel - expAfterBar);
+
+    let barsNeeded = 0;
+    if (isGenerator) {
+        // Generators don't waste overflow exp
+        barsNeeded = expRemaining / eAdd;
     } else {
-        let cost = calcUpgradeCost(name, data.upgrades[name].upgradesBought);
-        list[name].prio = list[name].base / cost;
+        // Normal actions need full completions
+        barsNeeded = Math.ceil(expRemaining / eAdd);
     }
-    return list;
+
+    let timeForExtraBars = barsNeeded * (pMax / pGain);
+    return timeToFinishBar + timeForExtraBars;
 }
 
-function find_next_cheapest_upgrade(type) {
-    let min_cost= -1;
-    let upgrade_name;
-    for (let key in upgradeData) {
-        if (upgradeData[key].type === type && data.upgrades[key].visible) {
-            if (!data.upgrades[key].isFullyBought) {
-                const cost = calcUpgradeCost(key, data.upgrades[key].upgradesBought);
-                if ((min_cost < 0 || min_cost > cost) && canAffordUpgrade(type, cost)) {
-                    min_cost = cost;
-                    upgrade_name = key;
-                }
+
+
+function registerListener(targetKey, sourceKey) {
+    const targetObj = data.actions[targetKey];
+    if (!targetObj.listeningActions) targetObj.listeningActions = [];
+
+    if (!targetObj.listeningActions.includes(sourceKey)) {
+        targetObj.listeningActions.push(sourceKey);
+    }
+}
+
+function unregisterListener(targetKey, sourceKey) {
+    const targetObj = data.actions[targetKey];
+    if (!targetObj || !targetObj.listeningActions) return;
+
+    const sourceObj = data.actions[sourceKey];
+    const stillHasConnection = sourceObj.customTriggers.some(t => t.targetKey === targetKey);
+
+    if (!stillHasConnection) {
+        targetObj.listeningActions = targetObj.listeningActions.filter(key => key !== sourceKey);
+    }
+}
+
+function checkIncomingTriggers(targetActionVar) {
+    const targetObj = data.actions[targetActionVar];
+
+    if (!targetObj.listeningActions || targetObj.listeningActions.length === 0) {
+        return;
+    }
+
+    // Tell each listening action to check its own trigger queue
+    targetObj.listeningActions.forEach(sourceKey => {
+        processTriggerQueue(sourceKey);
+    });
+}
+
+function processTriggerQueue(actionVar) {
+    let actionObj = data.actions[actionVar];
+    if (!actionObj.customTriggers || actionObj.customTriggers.length === 0) return;
+
+    actionObj.customTriggers.sort((a, b) => a.order - b.order);
+
+    let firedAny = false;
+
+    while (actionObj.currentCustomNum < actionObj.customTriggers.length) {
+        let activeTrigger = actionObj.customTriggers[actionObj.currentCustomNum];
+
+        if (activeTrigger.hasFired) {
+            actionObj.currentCustomNum++;
+            firedAny = true;
+            continue;
+        }
+
+        let targetObj = data.actions[activeTrigger.targetKey];
+        let conditionMet = evaluateCondition(activeTrigger, targetObj);
+
+        if (conditionMet) {
+            executeTriggerReward(actionVar, activeTrigger);
+            activeTrigger.hasFired = true;
+            actionObj.currentCustomNum++;
+            firedAny = true;
+        } else {
+            break;
+        }
+    }
+
+    if (firedAny) {
+        rebuildCustomTriggersUI(actionVar);
+    }
+}
+
+function evaluateCondition(trigger, targetObj) {
+    if (trigger.condition === 'unlocked') {
+        return targetObj.unlocked;
+    }
+    else if (trigger.condition === 'max') {
+        return targetObj.level >= targetObj.maxLevel;
+    }
+    else if (trigger.condition === 'specific') {
+        return targetObj.level >= trigger.amount;
+    }
+    return false;
+}
+
+function executeTriggerReward(actionVar, trigger) {
+    let dataObj = actionData[actionVar];
+    let parentVar = dataObj.parentVar;
+
+    if (dataObj.hasUpstream) {
+        if (!trigger.recurse) {
+            setSliderUI(parentVar, actionVar, trigger.rewardVal);
+        } else {
+            if (trigger.rewardVal > 0) {
+                enableAutomationUpwards(actionVar, true);
+                setSliderUI(parentVar, actionVar, trigger.rewardVal);
+            } else {
+                disableAutomationUpwards(actionVar, true);
             }
         }
     }
-    return upgrade_name;
 }
 
-function buy_aw_upgrades() {
-    while (find_next_cheapest_upgrade("actions") !== undefined) {
-        const name = find_next_cheapest_upgrade("actions");
-        buyUpgrade(name);
-        console.log(name);
-    }
-}
-
-function buy_specific_upgrade(key, lvl) {
-    const cost = calcUpgradeCost(key, data.upgrades[key].upgradesBought);
-    if (data.upgrades[key].upgradesBought < lvl && canAffordUpgrade(upgradeData[key].type, cost)) {
-        buyUpgrade(key);
-        console.log(key);
-    }
-}
-
-function calc_total_ac_worth() {
-    let result = data.ancientCoin;
-    for (let upg in data.upgrades) {
-        if (upgradeData[upg].type !== "actions" && upgradeData[upg].type !== "genesis" && upgradeData[upg].isAutomation !== true) {
-            result += calcTotalSpentOnUpgrade(data.upgrades[upg].initialCost, data.upgrades[upg].costIncrease, data.upgrades[upg].upgradesBought, data.upgrades[upg].additiveIncrease);
-        }
-    }
-    return Math.round(result);
-}
