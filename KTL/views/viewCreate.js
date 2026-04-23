@@ -1428,6 +1428,8 @@ function setAllCaches() {
     queueCache("genesisResets");
     queueCache("shopContainer");
     queueCache("toggleBonusSpeedButton");
+    queueCache("automationDisplay");
+    queueCache("toggleAutomationButton");
 
     for(let actionVar in data.actions) {
         view.cached[`${actionVar}ActionPower`] = document.getElementById(`${actionVar}ActionPower`);

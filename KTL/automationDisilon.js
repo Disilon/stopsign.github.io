@@ -132,94 +132,97 @@ autosetup[1].push({type:"reset", ac:11500, hatl:9, mq:576, hope:-200});
 autosetup[1].push({type:"reset", ac:48000, hatl:12, mq:2646, hope:-200});
 autosetup[1].push({type:"severance", action:"save"});
 
-let goal_hatl= 1;
-let goal_mq= 1;
-let goal_hope= -100;
-let goal_legacy= 0;
-let save_ac= false;
-let save_aw= false;
-let upgrade_priority= {};
-let specific_upgrades= [];
-let severance= "stop";
-let auto_enabled= true;
+let auto = {
+    enabled: false,
+    goal_hatl: 1,
+    goal_mq: 1,
+    goal_hope: -100,
+    goal_legacy: 0,
+    save_ac: false,
+    save_aw: false,
+    upgrade_priority: {},
+    specific_upgrades: [],
+    severance: "stop",
+    previous_ac: 0
+};
+
+let next_auto= {};
 
 function cycle_auto() {
     let current_ac = calc_total_ac_worth();
+    next_auto = undefined;
     for (let i = 0; i < autosetup[data.lichKills].length; i++) {
-        let auto = autosetup[data.lichKills][i];
-        if (auto.ac === undefined) {
-            auto.ac = 0;
+        let as = autosetup[data.lichKills][i];
+        if (as.ac === undefined) {
+            as.ac = 0;
         }
-        if (auto.legacy === undefined) {
-            auto.legacy = 0;
+        if (as.legacy === undefined) {
+            as.legacy = 0;
         }
-        if (auto.mq === undefined) {
-            auto.mq = 1;
+        if (as.mq === undefined) {
+            as.mq = 1;
         }
-        if (auto.save_ac === undefined) {
-            auto.save_ac = false;
+        if (as.save_ac === undefined) {
+            as.save_ac = false;
         }
-        if (auto.save_aw === undefined) {
-            auto.save_aw = false;
+        if (as.save_aw === undefined) {
+            as.save_aw = false;
         }
-        if (current_ac >= auto.ac) {
-            if (auto.type === "priority") {
-                upgrade_priority = {};
-                for (let key in auto.list) {
-                    upgrade_priority[key] = {base:auto.list[key]};
+        if (current_ac >= as.ac) {
+            if (as.ac > 0) auto.previous_ac = as.ac;
+            if (as.type === "priority") {
+                auto.upgrade_priority = {};
+                for (let key in as.list) {
+                    auto.upgrade_priority[key] = {base:as.list[key]};
                 }
             }
-            if (auto.type === "reset") {
-                goal_hatl = auto.hatl;
-                goal_mq = auto.mq;
-                goal_hope = auto.hope;
-                goal_legacy = auto.legacy;
-                save_ac = auto.save_ac;
-                save_aw = auto.save_aw;
-                if (auto.specific !== undefined) {
-                    specific_upgrades = auto.specific;
+            if (as.type === "reset") {
+                auto.goal_hatl = as.hatl;
+                auto.goal_mq = as.mq;
+                auto.goal_hope = as.hope;
+                auto.goal_legacy = as.legacy;
+                auto.save_ac = as.save_ac;
+                auto.save_aw = as.save_aw;
+                if (as.specific !== undefined) {
+                    auto.specific_upgrades = as.specific;
                 }
             }
-            if (auto.type === "severance") {
-                severance = auto.action;
-
+            if (as.type === "severance") {
+                auto.severance = as.action;
+            }
+        } else {
+            if (next_auto === undefined && as.type === "reset") {
+                // next_auto = structuredClone(as);
+                next_auto = as;
             }
         }
     }
     if (data.upgrades["keepUnlockedCount"].upgradesBought > 0) {
-        upgrade_priority.recognizeTheFamiliarity = {base:75};
+        auto.upgrade_priority.recognizeTheFamiliarity = {base:75};
     } else {
-        upgrade_priority.recognizeTheFamiliarity = {base:25};
+        auto.upgrade_priority.recognizeTheFamiliarity = {base:25};
     }
+    updateAutomationDisplay();
 }
 
 function automate() {
     if (data.gameState === "KTL") {
         if (document.getElementById("legacySeveranceButton1").style.display === "") {
-            if (severance === "save") {
+            if (auto.severance === "save") {
                 update_priority(uniquepriority);
                 buy_ac_upgrades(uniquepriority);
                 exportSaveFile("KTL_LS_" + data.lichKills);
                 legacySeveranceReset(true);
                 changeBonusSpeed(400);
             } else {
-                auto_enabled = false;
+                auto.enabled = false;
+                updateAutomationButton();
                 pauseGame();
             }
             return;
         }
-        if (data.atts.hope.num <= goal_hope) {
-            for (let specific of specific_upgrades) {
-                buy_specific_upgrade(specific.name, specific.lvl);
-            }
-            if (!save_aw) {
-                buy_aw_upgrades();
-            }
-            upgrade_priority = update_priority(upgrade_priority);
-            if (!save_ac) {
-                buy_ac_upgrades(upgrade_priority);
-            }
-            cycle_auto();
+        if (data.atts.hope.num <= auto.goal_hope) {
+            buy_upgrades();
             if (!data.gameSettings.stop) {
                 document.getElementById('amuletConfirm').checked = true;
                 console.log("Amulet reset:" + data.resetCount);
@@ -228,13 +231,27 @@ function automate() {
             }
         }
     } else {
-        if (data.actions.hearAboutTheLich.level >= goal_hatl && actionData.awakenYourGrimoire.manaQuality() >= goal_mq) {
-            if (data.legacy >= goal_legacy) {
+        if (data.actions.hearAboutTheLich.level >= auto.goal_hatl && actionData.awakenYourGrimoire.manaQuality() >= auto.goal_mq) {
+            if (data.legacy >= auto.goal_legacy) {
                 changeBonusSpeed(100);
                 initializeKTL(true);
             }
         }
     }
+}
+
+function buy_upgrades() {
+    for (let specific of auto.specific_upgrades) {
+        buy_specific_upgrade(specific.name, specific.lvl);
+    }
+    if (!auto.save_aw) {
+        buy_aw_upgrades();
+    }
+    auto.upgrade_priority = update_priority(auto.upgrade_priority);
+    if (!auto.save_ac) {
+        buy_ac_upgrades(auto.upgrade_priority);
+    }
+    cycle_auto();
 }
 
 function buy_ac_upgrades(list) {
@@ -325,4 +342,57 @@ function calc_total_ac_worth() {
         }
     }
     return Math.round(result);
+}
+
+function updateAutomationDisplay() {
+    document.getElementById("automationInfoContainer").innerHTML = automationInfo();
+}
+
+function automationInfo() {
+    if (next_auto === undefined) {
+        return `
+        AC: ${calc_total_ac_worth() ?? "-"}<br>
+        previous AC goal: ${auto.previous_ac ?? "-"}<br>
+        previous HATL goal: ${auto.goal_hatl ?? "-"}<br>
+        previous MQ goal: ${auto.goal_mq ?? "-"}<br>
+        previous Legacy goal: ${auto.goal_legacy ?? "-"}<br>
+        action on severance: ${auto.severance ?? "-"}
+    `;
+    } else {
+        return `
+        AC: ${calc_total_ac_worth() ?? "-"}<br>
+        previous/next AC goal: ${auto.previous_ac ?? "-"} / ${next_auto.ac ?? "-"}<br>
+        previous/next HATL goal: ${auto.goal_hatl ?? "-"} / ${next_auto.hatl ?? "-"}<br>
+        previous/next MQ goal: ${auto.goal_mq ?? "-"} / ${next_auto.mq ?? "-"}<br>
+        previous/next Legacy goal: ${auto.goal_legacy ?? "-"} / ${next_auto.legacy ?? "-"}<br>
+        action on severance: ${auto.severance ?? "-"}
+    `;
+    }
+}
+
+function automationHideButton() {
+    let button = document.getElementById("automationDisplayShowButton");
+    let automationDisplay = view.cached.automationDisplay;
+    if(automationDisplay.style.display !== "none") {
+        automationDisplay.style.display = "none";
+        button.style.display = "";
+    } else {
+        automationDisplay.style.display = "flex";
+        button.style.display = "none";
+    }
+}
+
+function toggleAutomation() {
+    auto.enabled = !auto.enabled;
+    updateAutomationButton();
+}
+
+function updateAutomationButton() {
+    if(!auto.enabled) {
+        views.updateVal("toggleAutomationButton", "red", "style.backgroundColor");
+        views.updateVal("toggleAutomationButton", "Enable automation", "textContent")
+    } else {
+        views.updateVal("toggleAutomationButton", "green", "style.backgroundColor");
+        views.updateVal("toggleAutomationButton", "Disable automation", "textContent")
+    }
 }

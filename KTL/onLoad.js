@@ -90,6 +90,7 @@ function updateUIOnLoad() {
     updateBonusSpeedButton();
     bonusMenuHideButton();
     statMenuHideButton();
+    automationHideButton();
     toggleLog();
 
 

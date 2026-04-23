@@ -41,7 +41,7 @@ function loop() {
         tickResidue = exactTicks - totalTicksToRun;
 
         if (!data.gameSettings.stop) {
-            if (auto_enabled && data.gameState !== "KTL") {
+            if (data.gameState !== "KTL") {
                 cycle_auto();
             }
             for (let i = 0; i < totalTicksToRun; i++) {

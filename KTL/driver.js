@@ -190,7 +190,7 @@ function gameTick() {
 
     upgradeUpdates()
     calcDeltas();
-    if (auto_enabled) {
+    if (auto.enabled) {
         automate();
     }
     reduceShopTimers(1000 / data.gameSettings.ticksPerSecond)
