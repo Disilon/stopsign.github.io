@@ -5,6 +5,7 @@ const earlypriority = {
     refineMyEnergy:110,
     refineMyIntegration:140,
 
+    valueMyResearch:20,
     refineMyAmplification:20,
     refineMyPulse:20,
     refineMyCycle:20,
@@ -37,6 +38,13 @@ const earlypriority = {
     increaseMyPace:40,
     listenToThePast:19,
     channelMore:19,
+    haveBetterConversations:19,
+    workHarder:19,
+    weaveSmallerStrands:11,
+    createABetterFoundation:40,
+    feelTheRemnants:19,
+    sparkMoreMana:19,
+    studyHarder:19,
 
     valueMyBody:55,
     rememberWhatIDid:70,
@@ -50,6 +58,7 @@ const midpriority = {
     refineMyEnergy:70,
     refineMyIntegration:100,
 
+    valueMyResearch:20,
     refineMyAmplification:20,
     refineMyPulse:20,
     refineMyCycle:20,
@@ -82,6 +91,68 @@ const midpriority = {
     increaseMyPace:40,
     listenToThePast:19,
     channelMore:19,
+    haveBetterConversations:19,
+    workHarder:19,
+    weaveSmallerStrands:11,
+    createABetterFoundation:40,
+    feelTheRemnants:19,
+    sparkMoreMana:19,
+    studyHarder:19,
+    increaseMarketCap:19,
+
+    increaseInitialInvestment:25,
+    valueMyBody:35,
+    rememberWhatIDid:70,
+    rememberHowIGrew:70,
+    rememberMyMastery:140
+};
+const latepriority = {
+    refineMyAwareness:50,
+    refineMyConcentration:50,
+    refineMyControl:50,
+    refineMyEnergy:50,
+    refineMyIntegration:100,
+
+    valueMyResearch:35,
+    refineMyAmplification:35,
+    refineMyPulse:35,
+    refineMyCycle:30,
+    refineMyResonance:140,
+
+    refineMyAmbition:30,
+    refineMyLeverage:20,
+    refineMySavvy:30,
+    refineMyVision:35,
+
+    refineMyInfluence:20,
+    refineMyConfidence:20,
+    refineMyCharm:20,
+
+    refineMyObservation:20,
+    refineMyEndurance:20,
+    refineMyMight:20,
+    refineMyNavigation:20,
+
+    refineMyWizardry:25,
+    refineMyArchmagery:20,
+    refineMySpellcraft:25,
+    refineMyValor:25,
+
+    refineMyImpedance:20,
+
+    haveBetterIceBreakers:19,
+    extractMyWorth:19,
+    glimpseTheWeave:2,
+    increaseMyPace:19,
+    listenToThePast:25,
+    channelMore:25,
+    haveBetterConversations:19,
+    workHarder:19,
+    weaveSmallerStrands:2,
+    createABetterFoundation:19,
+    feelTheRemnants:25,
+    sparkMoreMana:25,
+    studyHarder:19,
     increaseMarketCap:19,
 
     increaseInitialInvestment:25,
@@ -91,6 +162,7 @@ const midpriority = {
     rememberMyMastery:140
 };
 let uniquepriority= {
+    valueMyBody:{base:100},
     startALittleQuicker:{base:2},
     pickUpValuablePlants:{base:10},
     startCasualChats:{base:10},
@@ -98,7 +170,8 @@ let uniquepriority= {
     rememberWhatIFocusedOn:{base:1},
     increaseInitialInvestment:{base:100},
     findAngelInvestors:{base:100},
-    retrieveMyUnusedResources:{base:15}
+    retrieveMyUnusedResources:{base:15},
+    valueMyResearch:{base:100},
 };
 let autosetup = [[],[],[],[]];
 autosetup[0].push({type:"priority", list:earlypriority});
@@ -108,14 +181,14 @@ autosetup[0].push({type:"reset", ac:20, hatl:2, mq:4, hope:-200});
 autosetup[0].push({type:"reset", ac:110, hatl:2, mq:4, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:2}] });
 autosetup[0].push({type:"reset", ac:170, hatl:3, mq:6, hope:-200});
 autosetup[0].push({type:"reset", ac:1340, hatl:3, mq:6, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:3}] });
-autosetup[0].push({type:"reset", ac:1520, hatl:5, mq:48, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3}] });
+autosetup[0].push({type:"reset", ac:1520, hatl:5, mq:32, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3}] });
 autosetup[0].push({type:"priority", ac:1520, list:midpriority});
 autosetup[0].push({type:"reset", ac:2493, hatl:5, mq:32, hope:-200});
 autosetup[0].push({type:"reset", ac:6200, hatl:9, mq:540, hope:-200, specific:[{name:"increaseMarketCap",lvl:1}] });
 autosetup[0].push({type:"reset", ac:9200, hatl:9, mq:486, hope:-200});
-autosetup[0].push({type:"reset", ac:13200, hatl:8, mq:576, hope:-200});
-autosetup[0].push({type:"reset", ac:18500, hatl:9, mq:1470, hope:-200});
-autosetup[0].push({type:"severance", action:"stop"});
+autosetup[0].push({type:"reset", ac:12600, hatl:8, mq:544, hope:-200});
+autosetup[0].push({type:"reset", ac:16700, hatl:9, mq:1365, hope:-200});
+autosetup[0].push({type:"severance", action:"save"});
 
 autosetup[1].push({type:"priority", list:earlypriority});
 autosetup[1].push({type:"reset", ac:0, hatl:1, hope:-100});
@@ -124,19 +197,48 @@ autosetup[1].push({type:"reset", ac:3303+20, hatl:2, mq:4, hope:-200});
 autosetup[1].push({type:"reset", ac:3303+110, hatl:2, mq:4, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:2}] });
 autosetup[1].push({type:"reset", ac:3303+170, hatl:3, mq:6, hope:-200});
 autosetup[1].push({type:"reset", ac:3303+1160, hatl:3, mq:6, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:3}] });
-autosetup[1].push({type:"reset", ac:3303+1430, hatl:5, mq:48, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3}] });
-autosetup[1].push({type:"priority", ac:3303+1430, list:midpriority});
-autosetup[1].push({type:"reset", ac:3303+2493, hatl:5, mq:32, hope:-200});
+autosetup[1].push({type:"reset", ac:3303+1520, hatl:5, mq:48, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3}] });
+autosetup[1].push({type:"priority", ac:3303+1520, list:midpriority});
+autosetup[1].push({type:"reset", ac:5532, hatl:5, mq:32, hope:-200});
 autosetup[1].push({type:"reset", ac:9600, hatl:5, mq:32, hope:-200, specific:[{name:"increaseMarketCap",lvl:1}] });
 autosetup[1].push({type:"reset", ac:11500, hatl:9, mq:576, hope:-200});
-autosetup[1].push({type:"reset", ac:48000, hatl:12, mq:2646, hope:-200});
+autosetup[1].push({type:"reset", ac:42311, hatl:11, mq:2646, hope:-200});
 autosetup[1].push({type:"severance", action:"save"});
+
+autosetup[2].push({type:"priority", list:earlypriority});
+autosetup[2].push({type:"reset", ac:0, hatl:1, hope:-100});
+autosetup[2].push({type:"reset", ac:6872+10, hatl:2, mq:4, hope:-100});
+autosetup[2].push({type:"reset", ac:6872+100, hatl:2, mq:4, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:2}] });
+autosetup[2].push({type:"reset", ac:6872+160, hatl:3, mq:6, hope:-200});
+autosetup[2].push({type:"reset", ac:6872+1150, hatl:3, mq:6, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:3}] });
+autosetup[2].push({type:"reset", ac:8112, hatl:5, mq:48, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3}] });
+autosetup[2].push({type:"priority", ac:8112, list:midpriority});
+autosetup[2].push({type:"reset", ac:8820, hatl:6, mq:48, hope:-200});
+autosetup[2].push({type:"reset", ac:12010, hatl:7, mq:48, hope:-200});
+autosetup[2].push({type:"reset", ac:12087, hatl:9, mq:760, hope:-200});
+autosetup[2].push({type:"reset", ac:40000, hatl:12, mq:10000, hope:-200});
+autosetup[2].push({type:"severance", action:"save"});
+
+autosetup[3].push({type:"priority", list:earlypriority});
+autosetup[3].push({type:"reset", ac:0, hatl:1, hope:-100, specific:[{name:"improveMyGrimoire",lvl:1}] });
+autosetup[3].push({type:"reset", ac:12325+10, hatl:2, mq:4, hope:-100});
+autosetup[3].push({type:"reset", ac:12325+70, hatl:2, mq:4, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:2}] });
+autosetup[3].push({type:"reset", ac:12325+100, hatl:3, mq:6, hope:-200});
+autosetup[3].push({type:"reset", ac:12325+460, hatl:4, mq:6, hope:-200});
+autosetup[3].push({type:"reset", ac:13055, hatl:6, mq:48, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3}] });
+autosetup[3].push({type:"priority", ac:13055, list:midpriority});
+autosetup[3].push({type:"reset", ac:16700, hatl:10, mq:960, hope:-200});
+autosetup[3].push({type:"reset", ac:48000, hatl:13, mq:10500, momentum: 5e77, hope:-200, save_aw:true, specific:[{name:"improveOverclockToFight",lvl:10}] });
+autosetup[3].push({type:"priority", ac:48000, list:latepriority});
+autosetup[3].push({type:"reset", ac:220000, hatl:12, mq:7938, hope:-200});
+autosetup[3].push({type:"reset", ac:555000, hatl:16, mq:37800, hope:-200, save_aw:true, specific:[{name:"newGamePlus",lvl:1}] });
 
 let auto = {
     enabled: false,
     goal_hatl: 1,
     goal_mq: 1,
     goal_hope: -100,
+    goal_momentum: 0,
     goal_legacy: 0,
     save_ac: false,
     save_aw: false,
@@ -158,6 +260,9 @@ function cycle_auto() {
         }
         if (as.legacy === undefined) {
             as.legacy = 0;
+        }
+        if (as.momentum === undefined) {
+            as.momentum = 0;
         }
         if (as.mq === undefined) {
             as.mq = 1;
@@ -181,6 +286,7 @@ function cycle_auto() {
                 auto.goal_mq = as.mq;
                 auto.goal_hope = as.hope;
                 auto.goal_legacy = as.legacy;
+                auto.goal_momentum = as.momentum;
                 auto.save_ac = as.save_ac;
                 auto.save_aw = as.save_aw;
                 if (as.specific !== undefined) {
@@ -206,6 +312,13 @@ function cycle_auto() {
 }
 
 function automate() {
+    if (data.upgrades["newGamePlus"].upgradesBought > 0 || data.ancientWhisper >= 1000000) {
+        auto.enabled = false;
+        updateAutomationButton();
+        data.gameSettings.stop = true;
+        updatePauseButtonVisuals();
+        return;
+    }
     if (data.gameState === "KTL") {
         if (document.getElementById("legacySeveranceButton1").style.display === "") {
             if (auto.severance === "save") {
@@ -213,6 +326,7 @@ function automate() {
                 buy_ac_upgrades(uniquepriority);
                 exportSaveFile("KTL_LS_" + data.lichKills);
                 legacySeveranceReset(true);
+                auto.previous_ac = 0;
                 changeBonusSpeed(400);
             } else {
                 auto.enabled = false;
@@ -232,7 +346,7 @@ function automate() {
         }
     } else {
         if (data.actions.hearAboutTheLich.level >= auto.goal_hatl && actionData.awakenYourGrimoire.manaQuality() >= auto.goal_mq) {
-            if (data.legacy >= auto.goal_legacy) {
+            if (data.legacy >= auto.goal_legacy && data.totalMomentum >= auto.goal_momentum) {
                 changeBonusSpeed(100);
                 initializeKTL(true);
             }
@@ -241,6 +355,10 @@ function automate() {
 }
 
 function buy_upgrades() {
+    if (document.getElementById("legacySeveranceButton1").style.display === "") {
+        update_priority(uniquepriority);
+        buy_ac_upgrades(uniquepriority);
+    }
     for (let specific of auto.specific_upgrades) {
         buy_specific_upgrade(specific.name, specific.lvl);
     }
