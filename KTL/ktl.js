@@ -451,8 +451,8 @@ function initializeKTL(forceReset) {
 
     views.updateVal(`ancientCoinDisplay`, "", "style.display");
     views.updateVal(`ancientWhisperDisplay`, "", "style.display");
-    views.updateVal(`legacyMultDisplay`, "", "style.display");
-    views.updateVal(`ancientCoinMultDisplay`, "", "style.display");
+    // views.updateVal(`legacyMultDisplay`, "", "style.display");
+    // views.updateVal(`ancientCoinMultDisplay`, "", "style.display");
     data.doneKTL = true;
 }
 

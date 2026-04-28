@@ -1387,10 +1387,10 @@ function setAllCaches() {
     queueCache("openUseAmuletButton");
     queueCache("openViewAmuletButton");
     queueCache("legacyAmount");
-    queueCache("legacyMult");
+    // queueCache("legacyMult");
     queueCache("ancientCoin");
     queueCache("ancientCoin2");
-    queueCache("ancientCoinMult");
+    // queueCache("ancientCoinMult");
     queueCache("ancientWhisper");
     queueCache("ancientWhisper2");
     queueCache("lichCoinsDisplay");
@@ -1410,8 +1410,12 @@ function setAllCaches() {
     queueCache("ancientWhisperDisplay");
     queueCache("manaQualityDisplay");
     queueCache("jobDisplay");
-    queueCache("ancientCoinMultDisplay");
-    queueCache("legacyMultDisplay");
+    // queueCache("ancientCoinMultDisplay");
+    // queueCache("legacyMultDisplay");
+    queueCache("HATLDisplay");
+    queueCache("HATLestimatedDisplay");
+    queueCache("HATL");
+    queueCache("HATLestimated");
     queueCache("useAmuletMenu");
     queueCache("amuletEnabledContainer");
     queueCache("amuletMenuTitle");

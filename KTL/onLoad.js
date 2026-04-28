@@ -181,8 +181,8 @@ function updateUIOnLoad() {
         views.updateVal(`ancientCoinDisplay`, "", "style.display");
         views.updateVal(`ancientWhisperDisplay`, "", "style.display");
         views.updateVal(`legacyDisplay`, "", "style.display");
-        views.updateVal(`legacyMultDisplay`, "", "style.display");
-        views.updateVal(`ancientCoinMultDisplay`, "", "style.display");
+        // views.updateVal(`legacyMultDisplay`, "", "style.display");
+        // views.updateVal(`ancientCoinMultDisplay`, "", "style.display");
     }
     views.updateVal(`jobDisplay`, data.displayJob ? "" : "none", "style.display");
     changeJob(data.currentJob);
