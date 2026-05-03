@@ -13,12 +13,7 @@ function loop() {
 
     const tickInterval = 1000 / data.gameSettings.ticksPerSecond;
 
-    const maxElapsed = 2000; // ms (2 seconds max catch-up)
     let elapsed = now - lastTickTime;
-    if (elapsed > maxElapsed) {
-        lastTickTime = now - maxElapsed;
-        elapsed = maxElapsed;
-    }
 
     let ticksAvailable = Math.floor(elapsed / tickInterval);
     let didSomething = false;

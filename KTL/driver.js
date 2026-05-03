@@ -215,23 +215,23 @@ function calcDeltas() {
         let actionObj = data.actions[actionVar];
         let dataObj = actionData[actionVar];
 
-        let totalDecrease = actionObj.totalSend || 0;
+        let sendDecrease = actionObj.totalSend || 0;
+        let consumeDecrease = 0;
 
         if (!dataObj.isGenerator) {
-            totalDecrease += actionObj.progressGain;
-        } else {
-            if (["makeMoney", "socialize"].includes(actionVar)) {
-                totalDecrease += (actionObj.resource * calcTierMult(dataObj.tier)) * actionObj.progressGain / actionObj.progressMax;
-            }
+            consumeDecrease = actionObj.progressGain;
+        } else if (["makeMoney", "socialize"].includes(actionVar)) {
+            consumeDecrease = (actionObj.resource * calcTierMult(dataObj.tier)) * actionObj.progressGain / actionObj.progressMax;
         }
-        if(dataObj.ignoreConsume) {
-            totalDecrease = 0;
+
+        if (dataObj.ignoreConsume) {
+            consumeDecrease = 0;
         }
-        if(actionVar === "tidalBurden") {
-            actionObj.resourceDecrease = totalDecrease
+
+        if (actionVar === "tidalBurden") {
+            actionObj.resourceDecrease = sendDecrease + consumeDecrease;
         } else {
-            let consumptionReduction = Math.max(0, 1 - (data.shopUpgrades.focusBarsImproveEfficiency.upgradePower * .25 * actionObj.connectedLines));
-            actionObj.resourceDecrease = totalDecrease * (1-data.upgrades.reduceResourcesConsumed.upgradePower*.05) * consumptionReduction;
+            actionObj.resourceDecrease = sendDecrease + (consumeDecrease * consumeMultForProgress(actionObj, dataObj));
         }
 
         // Calculate the final net change per second for display.
