@@ -13,7 +13,12 @@ function loop() {
 
     const tickInterval = 1000 / data.gameSettings.ticksPerSecond;
 
+    const maxElapsed = 2000; // ms (2 seconds max catch-up)
     let elapsed = now - lastTickTime;
+    if (elapsed > maxElapsed) {
+        lastTickTime = now - maxElapsed;
+        elapsed = maxElapsed;
+    }
 
     let ticksAvailable = Math.floor(elapsed / tickInterval);
     let didSomething = false;
@@ -36,9 +41,6 @@ function loop() {
         tickResidue = exactTicks - totalTicksToRun;
 
         if (!data.gameSettings.stop) {
-            if (data.gameState !== "KTL") {
-                cycle_auto();
-            }
             for (let i = 0; i < totalTicksToRun; i++) {
                 didSomething = true;
                 gameTick();

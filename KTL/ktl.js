@@ -1,6 +1,21 @@
 
 let gameIsResetting = false;
 let KTLMenuOpen = false; //for the necessary UI updates to work while the menu is open
+function recalculateKTLCurrencyMultipliers() {
+    let hearAboutTheLichMult = 1;
+    if (data.actions.hearAboutTheLich.level > 1) {
+        hearAboutTheLichMult = Math.pow(1.5, data.actions.hearAboutTheLich.level - 1);
+    }
+    const coinUpgradeMult = Math.pow(1.05, data.upgrades.extraAncientCoins.upgradePower);
+    const coinShopMult = Math.pow(1.5, data.shopUpgrades.extraAncientCoins.upgradePower);
+    const whisperUpgradeMult = Math.pow(1.1, data.upgrades.extraAncientWhispers.upgradePower);
+    const whisperShopMult = Math.pow(1.5, data.shopUpgrades.extraAncientWhispers.upgradePower);
+    const potionMult = data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1;
+
+    data.ancientCoinMultKTL = hearAboutTheLichMult * coinUpgradeMult * coinShopMult * potionMult;
+    data.ancientWhisperMultKTL = whisperUpgradeMult * whisperShopMult * potionMult;
+}
+
 function openKTLMenu() {
     document.getElementById('confirmKTL').checked = false;
     KTLMenuOpen = !KTLMenuOpen;
@@ -73,9 +88,6 @@ function resetKTLSpiral() {
 
 function trackFirst() {
     if (!localStorage.getItem('firstResetSent')) {
-        gtag('event', 'first_reset', {
-            seconds_per_reset: data.secondsPerReset
-        });
         localStorage.setItem('firstResetSent', 'true');
     }
 }
@@ -102,8 +114,7 @@ function resetGameToBase() {
     LSMenuOpen = false;
     views.updateVal("legacySeveranceMenu", "none", "style.display");
     data.legacyMultKTL = 1;
-    data.ancientCoinMultKTL = Math.pow(1.05, data.upgrades.extraAncientCoins.upgradePower) * Math.pow(1.5, data.shopUpgrades.extraAncientCoins.upgradePower) * (data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1);
-    data.ancientWhisperMultKTL = Math.pow(1.1, data.upgrades.extraAncientWhispers.upgradePower) * Math.pow(1.5, data.shopUpgrades.extraAncientWhispers.upgradePower) * (data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1);
+    recalculateKTLCurrencyMultipliers();
 
 
     //Reset all atts and bonuses
@@ -255,6 +266,7 @@ function genesisReset(forceReset) {
     views.updateVal(`useAmuletMenu`, "none", "style.display");
     views.updateVal("openViewAmuletButton", "", "style.display");
 
+    checkShopUnlocks()
     displayLSStuff()
     actionTitleClicked('overclock')
     gameIsResetting = false;
@@ -381,6 +393,7 @@ function legacySeveranceReset(forceReset) {
     views.updateVal("openViewAmuletButton", "", "style.display")
 
     displayLSStuff()
+    checkShopUnlocks()
     actionTitleClicked('overclock')
     gameIsResetting = false;
 }
@@ -390,7 +403,6 @@ function initializeKTL(forceReset) {
         !(isDebug || (data.actions.hearAboutTheLich.level >= 1 && actionData.awakenYourGrimoire.manaQuality() >= 1)))) {
         return;
     }
-    data.gameState = "KTL";
     trackFirst();
     logKTL();
 
@@ -420,9 +432,12 @@ function initializeKTL(forceReset) {
         let power = data.upgrades.rememberWhatIFocusedOn.upgradePower + 1;
         if (data.upgrades.rememberWhatIFocusedOn.upgradePower > 0) {
             let actionObj = data.actions[focusObj.lineData.from];
-            actionObj[focusObj.lineData.to + "PermFocusMult"] += Math.pow(data.actions.hearAboutTheLich.level, 2) / 100;
-            if (actionObj[focusObj.lineData.to + "PermFocusMult"] > power) {
-                actionObj[focusObj.lineData.to + "PermFocusMult"] = power;
+            let permFocusMultKey = focusObj.lineData.to + "PermFocusMult";
+            if (actionObj[permFocusMultKey] < power) {
+                actionObj[permFocusMultKey] += Math.pow(data.actions.hearAboutTheLich.level, 2) / 100;
+                if (actionObj[permFocusMultKey] > power) {
+                    actionObj[permFocusMultKey] = power;
+                }
             }
         }
     }
@@ -432,8 +447,6 @@ function initializeKTL(forceReset) {
     data.actions.worry.resource = data.actions.hearAboutTheLich.resource;
 
     views.updateVal("killTheLichMenu", "none", "style.display")
-
-
 
     revealAtt("hope");
     data.actions.fightTheEvilForces.unlockCost = 0;
@@ -451,9 +464,10 @@ function initializeKTL(forceReset) {
 
     views.updateVal(`ancientCoinDisplay`, "", "style.display");
     views.updateVal(`ancientWhisperDisplay`, "", "style.display");
-    // views.updateVal(`legacyMultDisplay`, "", "style.display");
-    // views.updateVal(`ancientCoinMultDisplay`, "", "style.display");
+    views.updateVal(`legacyMultDisplay`, "", "style.display");
+    views.updateVal(`ancientCoinMultDisplay`, "", "style.display");
     data.doneKTL = true;
+    data.gameState = "KTL";
 }
 
 function openUseAmuletMenu(isUseable) {
@@ -497,7 +511,6 @@ function logKTL() {
             currentLegacy: data.legacy,
             resetCount: data.resetCount,
             currentMomentum: data.totalMomentum,
-            currentAC: calc_total_ac_worth()
             // currentFear: data.actions.hearAboutTheLich.resource, //not in use
         },
         stage2: null
@@ -547,8 +560,7 @@ function renderResetLog() {
                     ${log.stage1.hatlLevel ?? "-"} | 
                     ${log.stage1.mq ? intToString(log.stage1.mq, 1) : "-"} | 
                     ${log.stage1.resonance ?? "-"} | 
-                    ${log.stage1.valor ?? "-"} | 
-                    ${log.stage1.currentAC ?? "-"}
+                    ${log.stage1.valor ?? "-"}
                 </td>
                 <td style="">
                 ${log.stage2 ? `
@@ -569,7 +581,7 @@ function renderResetLog() {
                     <tr>
                         <th style="padding-right:15px; text-align:left;">#</th>
                         <th style="padding-right:15px; text-align:left;">Stats<br>(Reset | Legacy)</th>
-                        <th style="padding-right:15px; text-align:left;">Stage 1<br>(Momentum | HATL | MQ | Resonance | Valor | AC)</th>
+                        <th style="padding-right:15px; text-align:left;">Stage 1<br>(Momentum | HATL | MQ | Resonance | Valor)</th>
                         <th style="padding-right:15px; text-align:left;">Stage 2<br>(Fight Generated | Legacy Gained |<br> AC Gained | AW Gained)</th>
                     </tr>
                 </thead>
@@ -750,6 +762,7 @@ function useAmulet() {
     views.updateVal(`useAmuletMenu`, "none", "style.display");
     views.updateVal(`openViewAmuletButton`, "", "style.display");
 
+    checkShopUnlocks()
     // saveState()
     gameIsResetting = false;
 }

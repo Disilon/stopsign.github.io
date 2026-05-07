@@ -1111,19 +1111,21 @@ function actionTriggerText(type, info, extra) {
     } else if(type === "addAC") {
         let ACAmount = extra
             * (data.upgrades.listenCloserToWhispers.upgradePower === 1?3:1)
-            * (data.gameState === "KTL" ? data.ancientCoinMultKTL : 1)
-            * Math.pow(1.05, data.upgrades.extraAncientCoins.upgradePower)
-            * Math.pow(1.5, data.shopUpgrades.extraAncientCoins.upgradePower)
-            * (data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1);
+            * (data.gameState === "KTL"
+                ? data.ancientCoinMultKTL
+                : Math.pow(1.05, data.upgrades.extraAncientCoins.upgradePower)
+                    * Math.pow(1.5, data.shopUpgrades.extraAncientCoins.upgradePower)
+                    * (data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1));
         text += `+<span style="font-weight:bold;color:var(--AC-color)">${intToString(ACAmount, 1)}</span> Ancient Coins`
     } else if(type === "addAW") {
         let AWAmount = extra
             * (data.upgrades.listenCloserToWhispers.upgradePower === 1?3:1)
             * (1 + data.lichKills/2)
-            * (data.gameState === "KTL" ? data.ancientWhisperMultKTL : 1)
-            * Math.pow(1.1, data.upgrades.extraAncientWhispers.upgradePower)
-            * Math.pow(1.5, data.shopUpgrades.extraAncientWhispers.upgradePower)
-            * (data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1);
+            * (data.gameState === "KTL"
+                ? data.ancientWhisperMultKTL
+                : Math.pow(1.1, data.upgrades.extraAncientWhispers.upgradePower)
+                    * Math.pow(1.5, data.shopUpgrades.extraAncientWhispers.upgradePower)
+                    * (data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1));
         text += `+<span style="font-weight:bold;color:var(--AW-color)">${intToString(AWAmount, 1)}</span> Ancient Whispers`
     }
     return text;
@@ -1387,10 +1389,10 @@ function setAllCaches() {
     queueCache("openUseAmuletButton");
     queueCache("openViewAmuletButton");
     queueCache("legacyAmount");
-    // queueCache("legacyMult");
+    queueCache("legacyMult");
     queueCache("ancientCoin");
     queueCache("ancientCoin2");
-    // queueCache("ancientCoinMult");
+    queueCache("ancientCoinMult");
     queueCache("ancientWhisper");
     queueCache("ancientWhisper2");
     queueCache("lichCoinsDisplay");
@@ -1410,12 +1412,8 @@ function setAllCaches() {
     queueCache("ancientWhisperDisplay");
     queueCache("manaQualityDisplay");
     queueCache("jobDisplay");
-    // queueCache("ancientCoinMultDisplay");
-    // queueCache("legacyMultDisplay");
-    queueCache("HATLDisplay");
-    queueCache("HATLestimatedDisplay");
-    queueCache("HATL");
-    queueCache("HATLestimated");
+    queueCache("ancientCoinMultDisplay");
+    queueCache("legacyMultDisplay");
     queueCache("useAmuletMenu");
     queueCache("amuletEnabledContainer");
     queueCache("amuletMenuTitle");
@@ -1432,8 +1430,6 @@ function setAllCaches() {
     queueCache("genesisResets");
     queueCache("shopContainer");
     queueCache("toggleBonusSpeedButton");
-    queueCache("automationDisplay");
-    queueCache("toggleAutomationButton");
 
     for(let actionVar in data.actions) {
         view.cached[`${actionVar}ActionPower`] = document.getElementById(`${actionVar}ActionPower`);

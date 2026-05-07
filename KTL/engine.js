@@ -194,7 +194,7 @@ function adjustActionData(actionVar, key, value) {
     }
     if(['efficiencyBase', 'efficiencyMult'].includes(key)) {
         calcAttExpertise(actionVar);
-        actionObj.actionPower = actionObj.actionPowerBase * actionObj.actionPowerMult * (actionObj.efficiency/100);
+        actionObj.actionPower = actionObj.actionPowerBase * actionObj.actionPowerMult;
     }
 }
 

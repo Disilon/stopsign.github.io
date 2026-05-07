@@ -108,6 +108,7 @@ function toggleAllHundred(actionVar) {
     });
 }
 window.addEventListener('resize', () => {
+    updateZoomViewportVariables();
     resizeStatMenu();
     resizeCanvas();
     drawChart();
@@ -121,7 +122,7 @@ function resizeStatMenu() {
     }
 
     if(view.cached[`attDisplay`]) {
-        view.cached[`attDisplay`].style.maxHeight = window.innerHeight - reduction + "px";
+        view.cached[`attDisplay`].style.maxHeight = getViewportHeight() - reduction + "px";
     }
 }
 
@@ -714,12 +715,16 @@ function convertBonusTime() {
     let btn = document.getElementById('convertBtn');
     if (btn.innerText.indexOf("Use in") !== -1) return;
 
+    const msPerMinute = 60 * 1000;
     let amountToConvert = 0;
     if (data.currentGameState.bonusTime >= (2 + data.shopUpgrades.extraInstantTimeConversion.upgradePower) * 60 * 60 * 1000) {
         amountToConvert = (2 + data.shopUpgrades.extraInstantTimeConversion.upgradePower) * 60 * 60 * 1000;
     } else if(data.currentGameState.bonusTime > 0) {
         amountToConvert = data.currentGameState.bonusTime;
     }
+
+    amountToConvert = Math.floor(amountToConvert / msPerMinute) * msPerMinute;
+    if (amountToConvert <= 0) return;
 
     data.currentGameState.bonusTime -= amountToConvert;
     data.currentGameState.instantTime += amountToConvert;
@@ -730,10 +735,8 @@ function convertBonusTime() {
 function toggleBonusSpeed() {
     if(data.gameSettings.bonusSpeed > 1 || data.currentGameState.bonusTime <= 1000) {
         data.gameSettings.bonusSpeed = 1;
-        data.gameSettings.ticksPerSecond = 20
     } else {
         data.gameSettings.bonusSpeed = data.options.bonusRate;
-        checkTicksPerSecond();
     }
     updateBonusSpeedButton();
 }
@@ -749,24 +752,12 @@ function updateBonusSpeedButton() {
 }
 
 function changeBonusSpeed(num) {
-    data.options.bonusRate = num;
     if(data.gameSettings.bonusSpeed > 1) { //already running
         data.gameSettings.bonusSpeed = num;
-        checkTicksPerSecond();
     }
+    data.options.bonusRate = num;
 }
 
-function checkTicksPerSecond() {
-    if (data.options.bonusRate > 20) {
-        if (data.options.bonusRate > 100) {
-            data.gameSettings.ticksPerSecond = 1
-        } else {
-            data.gameSettings.ticksPerSecond = 5
-        }
-    } else {
-        data.gameSettings.ticksPerSecond = 20
-    }
-}
 
 function switchToPlane(num) {
     if(!data.planeUnlocked[num]) {

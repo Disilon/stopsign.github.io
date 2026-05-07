@@ -1,5 +1,13 @@
 function saveFileCorrection(saveVersionFromLoad) {
     let refundAmount = 0;
+
+    // < 10: daily bonus switched to midnight-based charging; give players 1 ready charge
+    if(saveVersionFromLoad < 10) {
+        const maxCharges = (data.shopUpgrades?.dailyBonusCharges?.upgradePower ?? 0) + 1;
+        const existingCharges = data.currentGameState?.dailyCharges ?? 0;
+        data.currentGameState.dailyCharges = Math.min(maxCharges, Math.max(existingCharges, 1));
+    }
+
     if(data.upgrades.useMoreComplexSpells.upgradePower >= 2) {
         purchaseAction("overponder")
     }
@@ -7,7 +15,16 @@ function saveFileCorrection(saveVersionFromLoad) {
     if(data.resetCount >= 1) {
         data.doneAmulet = true;
     }
+    if(data.gameState === "KTL" && data.planeUnlocked && data.planeUnlocked[2] === false) {
+        data.gameState = "default";
+    }
     data.upgrades.rememberMyMastery.initialCost = 600;
+
+    const msPerMinute = 60 * 1000;
+    const instant = data.currentGameState.instantTime;
+    if (instant > 0 && instant % msPerMinute !== 0) {
+        data.currentGameState.instantTime = Math.ceil(instant / msPerMinute) * msPerMinute;
+    }
 
     return refundAmount;
 }
@@ -43,6 +60,7 @@ function handleV2Saves(toLoad) {
     data.gameSettings.viewAll0Buttons = toLoad.gameSettings.viewAll0Buttons ?? false;
     data.gameSettings.viewTotalMomentum = toLoad.gameSettings.viewTotalMomentum ?? false;
     data.gameSettings.viewAdvancedSliders = toLoad.gameSettings.viewAdvancedSliders ?? false;
+    data.gameSettings.webZoomFactor = toLoad.gameSettings.webZoomFactor ?? 1;
     data.gameSettings.numberType = toLoad.gameSettings.numberType ?? "numberSuffix";
 
 
@@ -73,9 +91,14 @@ function handleV2Saves(toLoad) {
         refundAmount += calcTotalSpentOnUpgrade(loadObj.initialCost, loadObj.costIncrease, loadObj.upgradesBought);
     }
 
-    document.getElementById('v2Offline').innerText = secondsToTime(toLoad.currentGameState.bonusTime/1000)
-    document.getElementById('v2Legacy').innerText = intToString(toLoad.actions.echoKindle.resource)
-    document.getElementById('v2AC').innerText = intToString(refundAmount);
+    const v2OfflineEl = document.getElementById('v2Offline');
+    const v2LegacyEl = document.getElementById('v2Legacy');
+    const v2ACEl = document.getElementById('v2AC');
+    if (v2OfflineEl && v2LegacyEl && v2ACEl) {
+        v2OfflineEl.innerText = secondsToTime(toLoad.currentGameState.bonusTime/1000);
+        v2LegacyEl.innerText = intToString(toLoad.actions.echoKindle.resource);
+        v2ACEl.innerText = intToString(refundAmount);
+    }
 
     v2toLoad = {
         offlineTime:toLoad.currentGameState.bonusTime,

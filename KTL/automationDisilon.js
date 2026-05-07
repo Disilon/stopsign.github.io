@@ -173,62 +173,95 @@ let uniquepriority= {
     retrieveMyUnusedResources:{base:15},
     valueMyResearch:{base:100},
 };
+const awList = [
+    ["improveMyGrimoire", 1],
+    ["respectTheShrine", 1],
+    ["feelTheEchoesOfTheBurntTown", 1],
+    ["shapeMyMana", 1],
+    ["improveMyGrimoire", 2],
+    ["shapeMyMana", 2],
+    ["feelTheEchoesOfTheBurntTown", 2],
+    ["buyNicerStuff", 1],
+    ["useMyGrimoiresPower", 1],
+    ["useMyGrimoiresPower", 2],
+    ["shapeMyMana", 3],
+    ["chatLongerWithAllies", 1],
+    ["investMyCoins", 1],
+    ["buyNicerStuff", 2],
+    ["feelTheEchoesOfTheBurntTown", 3],
+    ["feelTheEchoesOfTheBurntTown", 4], //check this order
+    ["improveMyGrimoire", 3], // Low-genesis placing
+    ["investMyCoins", 2],
+    ["buyNicerStuff", 3],
+    ["chatLongerWithAllies", 2],
+    ["shapeMyMana", 4],
+    ["useMoreComplexSpells", 1],
+    ["stopBeingSoTense", 1],
+    ["feelTheEchoesOfTheBurntTown", 5],
+    ["chatLongerWithAllies", 3],
+    ["useMoreComplexSpells", 2],
+    ["shapeMyMana", 5],
+    ["shapeMyMana", 6],
+    ["feelTheEchoesOfTheBurntTown", 6],
+    ["exploreTheLibrary", 1],
+    ["shapeMyMana", 7],
+    ["readTheOldBooks", 1],
+    ["exploreTheLibrary", 2],
+    ["readSpellPrimers", 1],
+    ["investMyCoins", 3],
+    ["investMyCoins", 4],
+    ["spendMyFortune", 1],
+    ["improveMyHouse", 1],
+    ["improveMyHouse", 2],
+    // ["improveMyHouse", 3]
+];
 let autosetup = [[],[],[],[]];
 autosetup[0].push({type:"priority", list:earlypriority});
-autosetup[0].push({type:"reset", ac:0, hatl:1, hope:-100, specific:[{name:"improveMyGrimoire",lvl:1}] });
-autosetup[0].push({type:"reset", ac:10, hatl:2, mq:3, hope:-200});
-autosetup[0].push({type:"reset", ac:40, hatl:2, mq:3, hope:-200, save_aw:true, specific:[{name:"improveMyGrimoire",lvl:2},{name:"shapeMyMana",lvl:1}] });
-autosetup[0].push({type:"reset", ac:100, hatl:2, mq:3, hope:-200, specific:[{name:"refineMyIntegration",lvl:1},{name:"improveMyGrimoire",lvl:2}] });
-autosetup[0].push({type:"reset", ac:130, hatl:3, mq:5, hope:-200, specific:[{name:"buyNicerStuff",lvl:1},{name:"chatLongerWithAllies",lvl:1}] });
-autosetup[0].push({type:"reset", ac:220, hatl:3, mq:5, hope:-200, specific:[{name:"shapeMyMana",lvl:2}] });
-autosetup[0].push({type:"reset", ac:490, hatl:3, mq:5, hope:-200, save_aw:true, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:3},{name:"shapeMyMana",lvl:3}] });
-autosetup[0].push({type:"reset", ac:760, hatl:3, mq:5, hope:-200, save_aw:true, specific:[{name:"recognizeTheFamiliarity",lvl:1},{name:"feelTheEchoesOfTheBurntTown",lvl:3},{name:"shapeMyMana",lvl:3}] });
-autosetup[0].push({type:"reset", ac:850, hatl:5, mq:32, hope:-200, specific:[{name:"feelTheEchoesOfTheBurntTown",lvl:4}] });
-autosetup[0].push({type:"priority", ac:850, list:midpriority});
-autosetup[0].push({type:"reset", ac:2622+354, hatl:9, mq:270, hope:-200, specific:[{name:"increaseMarketCap",lvl:1}] });
-autosetup[0].push({type:"reset", ac:12200, hatl:10, mq:880, hope:-200});
+autosetup[0].push({type:"reset", ac:0, hatl:1, hope:-100});
+autosetup[0].push({type:"reset", stage:1, ac:10, hatl:2, mq:3});
+autosetup[0].push({type:"reset", stage:2, ac:130, hatl:3, mq:5});
+autosetup[0].push({type:"reset", stage:3, ac:490, hatl:3, mq:5});
+autosetup[0].push({type:"priority", ac:760, list:midpriority});
+autosetup[0].push({type:"reset", stage:4, ac:850, hatl:5, mq:32});
+autosetup[0].push({type:"reset", stage:5, ac:2622+354, hatl:9, mq:270});
+autosetup[0].push({type:"reset", stage:6, ac:12200, hatl:10, mq:880});
 autosetup[0].push({type:"severance", action:"save"});
 
 autosetup[1].push({type:"priority", list:earlypriority});
 autosetup[1].push({type:"reset", ac:0, hatl:1, hope:-100});
-autosetup[1].push({type:"reset", ac:3303+10, hatl:2, mq:3, hope:-100});
-autosetup[1].push({type:"reset", ac:3303+40, hatl:3, mq:4, hope:-200});
-autosetup[1].push({type:"reset", ac:3303+400, hatl:5, mq:32, hope:-200});
-autosetup[1].push({type:"priority", ac:3303+400, list:midpriority});
-autosetup[1].push({type:"reset", ac:5475, hatl:9, mq:300, hope:-200});
-autosetup[1].push({type:"reset", ac:20000, hatl:9, mq:300, hope:-200, specific:[{name:"refineMyResonance",lvl:3}] });
-autosetup[1].push({type:"reset", ac:23000, hatl:11, mq:2000, hope:-200});
+autosetup[1].push({type:"reset", stage:1, ac:3303+10, hatl:2, mq:3, hope:-100});
+autosetup[1].push({type:"reset", stage:1, ac:3303+40, hatl:3, mq:4});
+autosetup[1].push({type:"priority", ac:3303+310, list:midpriority});
+autosetup[1].push({type:"reset", stage:4, ac:3303+400, hatl:5, mq:32});
+autosetup[1].push({type:"reset", stage:5, ac:5475, hatl:9, mq:300});
+autosetup[1].push({type:"reset", stage:7, ac:23000, hatl:11, mq:2000});
 autosetup[1].push({type:"severance", action:"save"});
 
 autosetup[2].push({type:"priority", list:earlypriority});
 autosetup[2].push({type:"reset", ac:0, hatl:1, hope:-100});
-autosetup[2].push({type:"reset", ac:6872+10, hatl:2, mq:3, hope:-100});
-autosetup[2].push({type:"reset", ac:6872+40, hatl:3, mq:4, hope:-200, save_aw:true, specific:[{name:"shapeMyMana",lvl:3},{name:"feelTheEchoesOfTheBurntTown",lvl:2},{name:"improveMyGrimoire",lvl:2}] });
-autosetup[2].push({type:"reset", ac:6872+220, hatl:3, mq:4, hope:-200});
-autosetup[2].push({type:"reset", ac:6872+310, hatl:6, mq:32, hope:-200});
-autosetup[2].push({type:"priority", ac:6872+310, list:midpriority});
-autosetup[2].push({type:"reset", ac:6872+500, hatl:5, mq:32, hope:-200});
-autosetup[2].push({type:"reset", ac:8837, hatl:9, mq:252, hope:-200});
-autosetup[2].push({type:"reset", ac:18000, hatl:8, mq:252, hope:-200}); //, save_aw:true, specific:[{name:"exploreTheLibrary",lvl:1},{name:"shapeMyMana",lvl:7},{name:"readTheOldBooks",lvl:1},{name:"exploreTheLibrary",lvl:2},{name:"readSpellPrimers",lvl:1}]
-autosetup[2].push({type:"reset", ac:28000, hatl:8, mq:252, hope:-200, specific:[{name:"refineMyResonance",lvl:3}] });
-autosetup[2].push({type:"reset", ac:30000, hatl:11, mq:6000, hope:-300});
+autosetup[2].push({type:"reset", stage:1, ac:6872+10, hatl:2, mq:3, hope:-100});
+autosetup[2].push({type:"reset", stage:1, ac:6872+40, hatl:3, mq:4});
+autosetup[2].push({type:"priority", ac:6872+220, list:midpriority});
+autosetup[2].push({type:"reset", stage:4, ac:6872+310, hatl:6, mq:32});
+autosetup[2].push({type:"reset", stage:4, ac:6872+500, hatl:5, mq:32});
+autosetup[2].push({type:"reset", stage:5, ac:8837, hatl:9, mq:252});
+autosetup[2].push({type:"reset", stage:5, ac:18000, hatl:8, mq:252});
+autosetup[2].push({type:"reset", stage:8, ac:30000, hatl:11, mq:6000, hope:-300});
 autosetup[2].push({type:"severance", action:"save"});
 
 autosetup[3].push({type:"priority", list:earlypriority});
-autosetup[3].push({type:"reset", ac:0, hatl:1, hope:-100, specific:[{name:"improveMyGrimoire",lvl:1}] });
-autosetup[3].push({type:"reset", ac:12325+10, hatl:2, mq:3, hope:-100});
-autosetup[3].push({type:"reset", ac:12325+40, hatl:3, mq:4, hope:-200, save_aw:true, specific:[{name:"shapeMyMana",lvl:3},{name:"feelTheEchoesOfTheBurntTown",lvl:2},{name:"improveMyGrimoire",lvl:2}] });
-autosetup[3].push({type:"reset", ac:12325+220, hatl:3, mq:6, hope:-200});
-autosetup[3].push({type:"reset", ac:12325+310, hatl:6, mq:32, hope:-200});
-autosetup[3].push({type:"priority", ac:12325+310, list:midpriority});
-autosetup[3].push({type:"reset", ac:12325+500, hatl:5, mq:32, hope:-200});
-autosetup[3].push({type:"reset", ac:13875, hatl:9, mq:252, hope:-200});
-autosetup[3].push({type:"reset", ac:29000, hatl:9, mq:252, hope:-200, save_aw:true, specific:[{name:"readTheOldBooks",lvl:1},{name:"exploreTheLibrary",lvl:2},{name:"readSpellPrimers",lvl:1}] });
+autosetup[3].push({type:"reset", ac:0, hatl:1, hope:-100});
+autosetup[3].push({type:"reset", stage:1, ac:12325+10, hatl:2, mq:3, hope:-100});
+autosetup[3].push({type:"reset", stage:1, ac:12325+40, hatl:3, mq:4});
+autosetup[3].push({type:"priority", ac:12325+220, list:midpriority});
+autosetup[3].push({type:"reset", stage:4, ac:12325+310, hatl:6, mq:32});
+autosetup[3].push({type:"reset", stage:4, ac:12325+500, hatl:5, mq:32});
+autosetup[3].push({type:"reset", stage:5, ac:13875, hatl:9, mq:252});
 autosetup[3].push({type:"priority", ac:29000, list:latepriority});
-autosetup[3].push({type:"reset", ac:38000, hatl:14, mq:7938, momentum: 0, hope:-200, save_aw:true, specific:[{name:"improveOverclockToFight",lvl:10}] });
-autosetup[3].push({type:"reset", ac:65000, hatl:13, mq:4536, hope:-200, save_aw:true, specific:[{name:"improveOverclockToFight",lvl:10}] });
-autosetup[3].push({type:"reset", ac:120000, hatl:13, mq:4536, hope:-200, specific:[{name:"improveOverclockToFight",lvl:10}] });
-autosetup[3].push({type:"reset", ac:250000, hatl:16, mq:27000, hope:-270, save_aw:true, specific:[{name:"newGamePlus",lvl:1}] });
+autosetup[3].push({type:"reset", stage:8, ac:38000, hatl:14, mq:7938, save_aw:true, specific:[{name:"improveOverclockToFight",lvl:10}] });
+autosetup[3].push({type:"reset", stage:8, ac:65000, hatl:13, mq:4536, save_aw:true, specific:[{name:"improveOverclockToFight",lvl:10}] });
+autosetup[3].push({type:"reset", stage:8, ac:120000, hatl:13, mq:4536});
+autosetup[3].push({type:"reset", stage:108, ac:200000, hatl:16, mq:27000, hope:-270, save_aw:true, specific:[{name:"newGamePlus",lvl:1}] });
 
 let auto = {
     enabled: false,
@@ -250,7 +283,8 @@ let next_auto= {};
 
 data.ls_times = [];
 
-const log_bought_upgrades = false;
+const log_bought_ACupgrades = true;
+const log_bought_AWupgrades = true;
 
 function cycle_auto() {
     let current_ac = calc_total_ac_worth();
@@ -269,13 +303,19 @@ function cycle_auto() {
         if (as.mq === undefined) {
             as.mq = 1;
         }
+        if (as.hope === undefined) {
+            as.hope = -100;
+        }
+        if (as.stage === undefined) {
+            as.stage = 0;
+        }
         if (as.save_ac === undefined) {
             as.save_ac = false;
         }
         if (as.save_aw === undefined) {
             as.save_aw = false;
         }
-        if (current_ac >= as.ac) {
+        if (current_ac >= as.ac && check_stage(as.stage)) {
             if (as.ac > 0) auto.previous_ac = as.ac;
             if (as.type === "priority") {
                 auto.upgrade_priority = {};
@@ -284,6 +324,7 @@ function cycle_auto() {
                 }
             }
             if (as.type === "reset") {
+                auto.stage = as.stage;
                 auto.goal_hatl = as.hatl;
                 auto.goal_mq = as.mq;
                 auto.goal_hope = as.hope;
@@ -300,7 +341,6 @@ function cycle_auto() {
             }
         } else {
             if (next_auto === undefined && as.type === "reset") {
-                // next_auto = structuredClone(as);
                 next_auto = as;
             }
         }
@@ -332,6 +372,8 @@ function automate() {
                 update_priority(uniquepriority);
                 buy_ac_upgrades(uniquepriority);
                 recordLStime();
+                console.log(`Amulet run ${data.resetCount} ended`);
+                console.log(`Legacy severance ${data.lichKills} ended`);
                 data.gameSettings.stop = true;
                 exportSaveFile("KTL_LS_" + data.lichKills);
                 data.gameSettings.stop = false;
@@ -346,15 +388,15 @@ function automate() {
             return;
         }
         if (data.atts.hope.num <= auto.goal_hope) {
+            console.log(`stage ${auto.stage}`)
             buy_upgrades();
-            printAWlvls();
             if (!data.gameSettings.stop) {
                 document.getElementById('amuletConfirm').checked = true;
-                console.log("Amulet reset:" + data.resetCount);
+                console.log(`Amulet run ${data.resetCount} ended`);
                 useAmulet();
                 changeBonusSpeed(400);
                 if (auto.save_every_run) {
-                    exportSaveFile("KTL_Run_" + data.resetCount);
+                    exportSaveFile("KTL_Run_" + (data.resetCount-1));
                 }
             }
         }
@@ -376,23 +418,65 @@ function buy_upgrades() {
     for (let specific of auto.specific_upgrades) {
         buy_specific_upgrade(specific.name, specific.lvl);
     }
+    if (auto.save_aw) {
+        auto.save_aw = auto.specific_upgrades.some(specific =>
+            data.upgrades[specific.name]?.type === "actions" && !check_u(specific.name, specific.lvl)
+        );
+    }
+    if (auto.save_ac) {
+        auto.save_ac = auto.specific_upgrades.some(specific =>
+            data.upgrades[specific.name]?.type !== "actions" && !check_u(specific.name, specific.lvl)
+        );
+    }
     if (!auto.save_aw) {
-        buy_aw_upgrades();
+        buy_aw_upgrades(ready_for_next_stage());
     }
     auto.upgrade_priority = update_priority(auto.upgrade_priority);
     if (!auto.save_ac) {
         buy_ac_upgrades(auto.upgrade_priority);
     }
+    printAWlvls();
+    console.log(`AC left ${Math.floor(data.ancientCoin)} AW left ${Math.floor(data.ancientWhisper)}`)
+    console.log(`ready for stage ${getCurrentStage()}`)
+    if (check_next_stage()) {
+        console.log("next run stage increase");
+    }
     cycle_auto();
 }
 
 function buy_ac_upgrades(list) {
+    if (ready_for_next_stage() && next_auto.stage > 5) {
+        for (let i = 0; i < 8; i++) {
+            if (data.upgrades.refineMyResonance.visible && !data.upgrades.refineMyResonance.isFullyBought) {
+                const cost = calcUpgradeCost("refineMyResonance", data.upgrades.refineMyResonance.upgradesBought);
+                if (data.ancientCoin >= cost) {
+                    if (log_bought_ACupgrades) console.log("refineMyResonance - for KTL");
+                    buyUpgrade("refineMyResonance");
+                }
+            }
+        }
+    }
     while (find_next_ac_upgrade(list, true) !== undefined) {
         const name = find_next_ac_upgrade(list, true);
-        if (log_bought_upgrades) console.log(name);
+        if (log_bought_ACupgrades) console.log(name);
         buyUpgrade(name);
         list = update_priority(list, name);
     }
+    if (check_next_stage()) {
+        if (data.ancientCoinGained * 0.5 < data.ancientCoin) {
+            const name = find_next_ac_upgrade(list, false);
+            if (name !== undefined) {
+                if (log_bought_ACupgrades) console.log(name + " leftovers");
+                buyUpgrade(name);
+                list = update_priority(list, name);
+            }
+        }
+    }
+}
+
+function check_next_stage() {
+    if (next_auto === undefined) return false;
+    return auto.stage < next_auto.stage && getCurrentStage() === next_auto.stage && calc_total_ac_worth() >= next_auto.ac;
 }
 
 function find_next_ac_upgrade(list, save_for_prio) {
@@ -450,23 +534,42 @@ function find_next_cheapest_upgrade(type) {
     return upgrade_name;
 }
 
-function buy_aw_upgrades() {
-    while (find_next_cheapest_upgrade("actions") !== undefined) {
-        const name = find_next_cheapest_upgrade("actions");
-        buyUpgrade(name);
-        if (log_bought_upgrades) console.log(name);
+function buy_aw_upgrades(buy_leftovers) {
+    for (const [name, lvl] of awList) {
+        let success = buy_specific_upgrade(name, lvl);
+        if (!success) break;
+    }
+    if (buy_leftovers) {
+        let next;
+        while ((next = find_next_cheapest_upgrade("actions")) && getCurrentStage() < 100) {
+            buyUpgrade(next);
+            log_bought_AWupgrades && console.log(next + " leftovers");
+        }
     }
 }
 
 function buy_specific_upgrade(key, lvl) {
-    const max_lvl = Math.min(data.upgrades[key].upgradesAvailable, lvl);
+    let max_lvl = Math.min(data.upgrades[key].upgradesAvailable, lvl);
+    if (!data.upgrades[key].visible) max_lvl = 0;
     for (let i = data.upgrades[key].upgradesBought; i < max_lvl; i++) {
         const cost = calcUpgradeCost(key, data.upgrades[key].upgradesBought);
         if (data.upgrades[key].visible && canAffordUpgrade(upgradeData[key].type, cost)) {
             buyUpgrade(key);
-            if (log_bought_upgrades) console.log(key);
+            if (data.upgrades[key].type === "actions") {
+                if (log_bought_AWupgrades) console.log(key);
+            } else {
+                if (log_bought_ACupgrades) console.log(key);
+            }
         }
     }
+    return data.upgrades[key].upgradesBought >= max_lvl;
+}
+
+function ready_for_next_stage() {
+    if (next_auto === undefined) {
+        return false;
+    }
+    return calc_total_ac_worth() >= next_auto.ac && check_stage(next_auto.stage);
 }
 
 function calc_total_ac_worth() {
@@ -488,6 +591,7 @@ function automationInfo() {
         return `
         LS: ${data.lichKills ?? "-"}<br>
         AC: ${calc_total_ac_worth() ?? "-"}<br>
+        previous/next stage: ${auto.stage ?? "-"}<br>
         previous AC goal: ${auto.previous_ac ?? "-"}<br>
         previous HATL goal: ${auto.goal_hatl ?? "-"}<br>
         previous MQ goal: ${auto.goal_mq ?? "-"}<br>
@@ -499,6 +603,7 @@ function automationInfo() {
         return `
         LS: ${data.lichKills ?? "-"}<br>
         AC: ${calc_total_ac_worth() ?? "-"}<br>
+        previous/next stage: ${auto.stage ?? "-"} / ${next_auto.stage ?? "-"}<br>
         previous/next AC goal: ${auto.previous_ac ?? "-"} / ${next_auto.ac ?? "-"}<br>
         previous/next HATL goal: ${auto.goal_hatl ?? "-"} / ${next_auto.hatl ?? "-"}<br>
         previous/next MQ goal: ${auto.goal_mq ?? "-"} / ${next_auto.mq ?? "-"}<br>
@@ -566,4 +671,60 @@ function printAWlvl(name) {
     if (lvl > 0) {
         console.log(name + " - " + lvl);
     }
+}
+
+/**
+ * @param {number} stage
+ * 1: MQ 2-4
+ * 2: MQ 5?
+ * 3: MQ 5-6
+ * 4: MQ 12-64
+ * 5: MQ 165-408
+ * 6: MQ 600+
+ * 7: MQ 1000+
+ * 8: MQ 4000+
+ * 100+: improveOverclockToFight lvl + 100
+ * @return boolean
+ */
+function check_stage(stage) {
+    if (stage > 100) {
+        return check_u("improveOverclockToFight",stage-100);
+    }
+    switch (stage) {
+        case 0:
+            return true;
+        case 1:
+            return check_u("improveMyGrimoire",1);
+        case 2:
+            return check_u("improveMyGrimoire",2);
+        case 3:
+            return check_u("improveMyGrimoire",2) && check_u("shapeMyMana",2);
+        case 4:
+            return check_u("improveMyGrimoire",2) && check_u("shapeMyMana",3);
+        case 5:
+            return check_u("improveMyGrimoire",3) && check_u("shapeMyMana",4);
+        case 6:
+            return check_u("improveMyGrimoire",3) && check_u("shapeMyMana",5) && check_u("useMoreComplexSpells",2);
+        case 7:
+            return check_u("improveMyGrimoire",3) && check_u("shapeMyMana",7) && check_u("useMoreComplexSpells",2);
+        case 8:
+            return check_u("improveMyGrimoire",3) && check_u("shapeMyMana",7) && check_u("useMoreComplexSpells",2) && check_u("readSpellPrimers",1);
+    }
+    return false;
+}
+
+function getCurrentStage() {
+    const iotf = data.upgrades.improveOverclockToFight.upgradesBought;
+    if (iotf > 0) return iotf + 100;
+    // Start from the highest stage and go down to find the first completed one
+    for (let stage = 8; stage >= 0; stage--) {
+        if (check_stage(stage)) {
+            return stage;
+        }
+    }
+    return 0;
+}
+
+function check_u(name, lvl) {
+    return data.upgrades[name].upgradesBought >= lvl;
 }

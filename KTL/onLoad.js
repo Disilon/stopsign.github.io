@@ -81,17 +81,14 @@ function updateUIOnLoad() {
     document.getElementById("showCompleteUpgrades").checked = data.gameSettings.showCompletedToggle;
     document.getElementById("showUnaffordableUpgrades").checked = data.gameSettings.showUnaffordable;
     document.getElementById("sortByCost").checked = data.gameSettings.sortByCost;
+    applyWebZoomFactor(data.gameSettings.webZoomFactor ?? 1);
 
         if(data.gameSettings.bonusSpeed > 1) {
         data.gameSettings.bonusSpeed = 1;
          //set it to 3 or set the checked correctly on load
     }
-    data.options.bonusRate = 10;
+    data.options.bonusRate = 3;
     updateBonusSpeedButton();
-    bonusMenuHideButton();
-    statMenuHideButton();
-    automationHideButton();
-    toggleLog();
 
 
     for (let actionVar in data.actions) {
@@ -181,8 +178,8 @@ function updateUIOnLoad() {
         views.updateVal(`ancientCoinDisplay`, "", "style.display");
         views.updateVal(`ancientWhisperDisplay`, "", "style.display");
         views.updateVal(`legacyDisplay`, "", "style.display");
-        // views.updateVal(`legacyMultDisplay`, "", "style.display");
-        // views.updateVal(`ancientCoinMultDisplay`, "", "style.display");
+        views.updateVal(`legacyMultDisplay`, "", "style.display");
+        views.updateVal(`ancientCoinMultDisplay`, "", "style.display");
     }
     views.updateVal(`jobDisplay`, data.displayJob ? "" : "none", "style.display");
     changeJob(data.currentJob);

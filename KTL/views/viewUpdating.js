@@ -44,20 +44,15 @@ let views = {
         views.updateVal(`secondsThisGR`, data.currentGameState.secondsThisGR, "textContent", "time");
         views.updateVal(`secondsThisLSContainer`, (data.lichKills > 0 || data.genesisResets > 0) ? "" : "none", "style.display");
         views.updateVal(`secondsThisLS`, data.currentGameState.secondsThisLS, "textContent", "time");
-        // views.updateVal(`legacyMult`, data.legacyMultKTL
-        //     * Math.pow(1.1, data.upgrades.extraLegacy.upgradePower)
-        //     * Math.pow(1.5, data.shopUpgrades.extraLegacy.upgradePower)
-        //     * (data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1), "innerText", 2);
-        // views.updateVal(`ancientCoinMult`, data.ancientCoinMultKTL, "innerText", 2);
+        views.updateVal(`legacyMult`, data.legacyMultKTL
+            * Math.pow(1.1, data.upgrades.extraLegacy.upgradePower)
+            * Math.pow(1.5, data.shopUpgrades.extraLegacy.upgradePower)
+            * (data.shopUpgrades.currencyGainPotion.upgradePower > 0 ? 2 : 1), "innerText", 2);
+        views.updateVal(`ancientCoinMult`, data.ancientCoinMultKTL, "innerText", 2);
 
         views.updateVal(`manaQualityDisplay`, actionData.awakenYourGrimoire.manaQuality() > 0 ? "" : "none", "style.display");
 
         views.updateVal(`jobDisplay`, data.displayJob ? "" : "none", "style.display");
-
-        views.updateVal(`HATLDisplay`, data.actions.hearAboutTheLich.unlocked ? "" : "none", "style.display");
-        views.updateVal(`HATLestimatedDisplay`, data.actions.hearAboutTheLich.unlocked ? "" : "none", "style.display");
-        views.updateVal(`HATL`, data.actions.hearAboutTheLich.level, "innerText", "none");
-        views.updateVal(`HATLestimated`, secondsToTime(calcTimeToLevel(data.actions.hearAboutTheLich), true), "textContent");
 
         let shouldShowKTLButton = data.actions.hearAboutTheLich.level >= 1 && data.gameState !== "KTL";
         views.updateVal(`killTheLichMenuButton2`, shouldShowKTLButton?"":"none", "style.display")
@@ -416,10 +411,8 @@ let views = {
         // views.updateVal(`${actionVar}TimeToLevelContainer`, actionObj.maxLevel !== actionObj.level ? "flex" : "none", "style.display")
         views.updateVal(`${actionVar}TimeToMaxContainer`, actionObj.maxLevel ? "flex" : "none", "style.display")
 
-        if(!actionObj.maxLevel || actionObj.maxLevel !== actionObj.level) {
-            let timeToLevel = calcTimeToLevel(actionObj);
-            views.updateVal(`${actionVar}TimeToLevel`, actionObj.maxLevel !== actionObj.level ? secondsToTime(timeToLevel, true) : "-", "textContent")
-        }
+        let timeToLevel = calcTimeToLevel(actionObj);
+        views.updateVal(`${actionVar}TimeToLevel`, actionObj.maxLevel !== actionObj.level ? secondsToTime(timeToLevel, true) : "-", "textContent")
         if(actionObj.maxLevel) {
             let timeToMax = calcTimeToMax(actionVar);
             views.updateVal(`${actionVar}TimeToMax`, actionObj.maxLevel !== actionObj.level ? secondsToTime(timeToMax, true) : "-", "textContent")
@@ -639,9 +632,9 @@ function isActionVisible(actionVar) {
     const elementScreenWidth = 350 * scaleByPlane[data.planeTabSelected];
     const elementScreenHeight = 400 * scaleByPlane[data.planeTabSelected];
 
-    return elementScreenX < window.innerWidth &&
+    return elementScreenX < getViewportWidth() &&
         elementScreenX + elementScreenWidth > 0 &&
-        elementScreenY < (window.innerHeight+50) &&
+        elementScreenY < (getViewportHeight() + 50) &&
         elementScreenY + elementScreenHeight > 0;
 }
 

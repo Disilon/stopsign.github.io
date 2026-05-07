@@ -1,7 +1,7 @@
 'use strict';
-function startGame() {
+async function startGame() {
     // load calls recalcInterval, which will start the callbacks
-    load();
+    await load();
     setScreenSize();
     setTimeout(initTimingSystem, 200);
 }
@@ -19,6 +19,7 @@ function checkOfflineProgress() {
             console.log(`Welcome back! Gained ${(offlineMilliseconds / 1000).toFixed(1)}s of bonus time.`);
             data.currentGameState.instantTimerCooldown -= offlineMilliseconds / 1000;
             data.currentGameState.dailyTimer -= offlineMilliseconds;
+            checkDailyTimer();
         }
     }
 }
@@ -190,9 +191,6 @@ function gameTick() {
 
     upgradeUpdates()
     calcDeltas();
-    if (auto.enabled) {
-        automate();
-    }
     reduceShopTimers(1000 / data.gameSettings.ticksPerSecond)
 }
 

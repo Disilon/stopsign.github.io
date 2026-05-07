@@ -65,6 +65,7 @@ let mySecret = "test"
 data.gameSettings = {
     gameSpeed: 1,
     bonusSpeed: 1,
+    webZoomFactor: 1,
     stop: false,
     stopAll: false,
     fps: 20,
@@ -115,7 +116,7 @@ data.shopUpgrades = {};
 
 let isDebug = false; //SET FOR COMMIT
 // let isDebug = true;
-let debugLevel = 150; //to set the rough number of loops. Max: 150. 1st loop: 46
+let debugLevel = 0; //to set the rough number of loops. Max: 150. 1st loop: 46
 function debug() {
     if(!isDebug) {
         return;
