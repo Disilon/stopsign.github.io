@@ -460,3 +460,287 @@ checkTicksPerSecond = function() {
         data.gameSettings.ticksPerSecond = 20
     }
 }
+
+function isObject(item) {
+    return item && typeof item === 'object' && !Array.isArray(item);
+}
+
+function isEqual(value1, value2) {
+    // Handle array comparison
+    if (Array.isArray(value1) && Array.isArray(value2)) {
+        if (value1.length !== value2.length) return false;
+
+        // For arrays of primitives, sort and compare
+        const isPrimitiveArray = value1.every(item => !isObject(item) && !Array.isArray(item));
+        if (isPrimitiveArray) {
+            const sorted1 = [...value1].sort();
+            const sorted2 = [...value2].sort();
+            return JSON.stringify(sorted1) === JSON.stringify(sorted2);
+        }
+
+        // For arrays of objects, compare each item
+        return JSON.stringify(value1) === JSON.stringify(value2);
+    }
+
+    // Handle object comparison
+    if (isObject(value1) && isObject(value2)) {
+        return JSON.stringify(value1) === JSON.stringify(value2);
+    }
+
+    // Handle primitive comparison
+    return value1 == value2;
+}
+
+load = async function() {
+    initializeData();
+
+    let toLoad = {};
+
+    if(loadStaticSaveFile) {
+        if(onLoadData) {
+            try {
+                console.log('Loading locally.');
+                toLoad = JSON.parse(decode64(onLoadData));
+            } catch (e) {
+                try { //old save
+                    toLoad = JSON.parse(decode(onLoadData));
+                } catch (e) {
+                    exportFile(onLoadData, "KTL_Error_File")
+                }
+            }
+        }
+    } else {
+        await loadFromSteamCloudToLocal();
+        if (localStorage[saveName]) {
+            if (localStorage[saveName].startsWith("{\"actions\":")) {
+                console.log('Save version 8+ found.');
+                try {
+                    toLoad = JSON.parse(localStorage[saveName]);
+                } catch (e) {
+                    exportFile(localStorage[saveName], "KTL_Error_File")
+                }
+            } else {
+                console.log('Save found.');
+                try {
+                    toLoad = JSON.parse(decode64(localStorage[saveName]));
+                } catch (e) {
+                    try { //old save
+                        toLoad = JSON.parse(decode(localStorage[saveName]));
+                    } catch (e) {
+                        exportFile(localStorage[saveName], "KTL_Error_File")
+                    }
+                }
+            }
+        }
+    }
+    if(!isLoadingEnabled) {
+        console.log('Save ignored.');
+        toLoad = {};
+    }
+
+    const saveVersionFromLoad = toLoad && toLoad.saveVersion !== undefined ? toLoad.saveVersion : data.saveVersion;
+    const checkFields = ["tier","progressMaxBase","progressMaxIncrease","expToLevelBase","expToLevelIncrease",
+        "actionPowerBase","actionPowerMult","actionPowerMultIncrease","efficiencyBase","efficiencyMult","efficiencyIdeal",
+        "onLevelAtts","expAtts","efficiencyAtts"];
+
+    let queuedLogMessages = []; //Any info that needs to be told to the user
+
+    if((loadStaticSaveFile || localStorage[saveName]) && saveVersionFromLoad < 6) {
+        if(!loadStaticSaveFile) {
+            exportFile(localStorage[saveName], "KTL_v2_Backup") //just in case
+        }
+        handleV2Saves(toLoad) //set aside the data you need, show welcome back message
+        document.getElementById("welcomeBackMessage").style.display = "";
+    } else if(localStorage[saveName] && toLoad.actions) {
+        toLoad.actions = saveVersionFromLoad <= 7 ? toLoad.actions : reverseExtractNestedSchema(toLoad.actions, actionsSchema);
+        //only go through the ones in toLoad and graft them on to existing data
+        for(let actionVar in toLoad.actions) {
+            let actionObj = data.actions[actionVar];
+            let dataObj = actionData[actionVar];
+            let loadObj = toLoad.actions[actionVar];
+            if(!dataObj) {
+                continue;
+            }
+            if(dataObj.creationVersion > saveVersionFromLoad) {
+                actionObj.automationOnReveal = loadObj.automationOnReveal;
+                console.log("Skipped loading action " + actionVar + " from save.");
+                continue;
+            } else {
+                // for(let fieldPath of checkFields) {
+                //     if(actionObj[fieldPath] !== undefined && !isEqual(actionObj[fieldPath], loadObj[fieldPath])) {
+                //         console.log(`Field "${fieldPath}" mismatch for action ${actionVar}:`,
+                //             JSON.stringify(actionObj[fieldPath]), 'vs', JSON.stringify(loadObj[fieldPath]));
+                //     }
+                // }
+            }
+            loadActionFromSave(actionObj, loadObj);
+        }
+
+        let refundAmount = 0;
+        for(let upgradeVar in toLoad.upgrades) {
+            let upgradeObj = data.upgrades[upgradeVar];
+            let upgradeDataObj = upgradeData[upgradeVar];
+            let loadObj = toLoad.upgrades[upgradeVar];
+            if(!upgradeDataObj || upgradeDataObj.creationVersion > saveVersionFromLoad) { //If removed or needs to refresh
+                let toRefund = calcTotalSpentOnUpgrade(loadObj.initialCost, loadObj.costIncrease, loadObj.upgradesBought, loadObj.additiveIncrease);
+                if(toRefund > 0) {
+                    refundAmount += toRefund;
+                    queuedLogMessages.push(["Info: Refunded <b>"+toRefund+"</b> AC for the upgrade: " + (loadObj.title || decamelizeWithSpace(upgradeVar)), "info"])
+                }
+                // console.log("Skipped loading upgrade " + upgradeVar + " from save.");
+                continue;
+            }
+            loadUpgradeFromSave(upgradeObj, loadObj);
+        }
+
+        for(let shopVar in toLoad.shopUpgrades) {
+            let shopObj = data.shopUpgrades[shopVar] ?? {};
+            let shopDataObj = shopUpgrades[shopVar];
+            let loadObj = toLoad.shopUpgrades[shopVar];
+            if(!shopDataObj || shopDataObj.creationVersion > saveVersionFromLoad) { //If removed or needs to refresh
+                let toRefund = calcTotalSpentOnUpgrade(loadObj.initialCost, loadObj.costIncrease, loadObj.upgradesBought, loadObj.additiveIncrease);
+                if(toRefund > 0) {
+                    refundAmount += toRefund;
+                    queuedLogMessages.push(["Info: Refunded <b>"+toRefund+"</b> SC for the upgrade: " + (loadObj.title || decamelizeWithSpace(shopVar)), "info"])
+                }
+                continue;
+            }
+            loadUpgradeFromSave(shopObj, loadObj);
+        }
+
+        // mergeExistingOnly(data, toLoad, "actions", ["x", "y", "realX", "realY"]); //use patch instead
+        //these are in the skiplist because if, between saves, an action has changed the atts it has, the links need to be reset instead of saved.
+        mergeExistingOnly(data, toLoad, "atts", ["linkedActionExpAtts", "linkedActionEfficiencyAtts", "linkedActionOnLevelAtts"]);
+        mergeExistingOnly(data, toLoad, "options");
+        mergeExistingOnly(data, toLoad, "gameSettings");
+
+        data.toastStates = toLoad.toastStates;
+
+        //load global items that aren't lists or objects
+        data.gameState = toLoad.gameState ?? "default";
+        data.planeTabSelected = toLoad.planeTabSelected ?? 0;
+        data.totalMomentum = toLoad.totalMomentum ?? 0;
+        data.ancientCoin = toLoad.ancientCoin ?? 0;
+        data.ancientWhisper = toLoad.ancientWhisper ?? 0;
+        data.useAmuletButtonShowing = !!toLoad.useAmuletButtonShowing;
+        data.secondsPerReset = toLoad.secondsPerReset ?? 0;
+        data.currentJob = toLoad.currentJob ?? "helpScottWithChores";
+        data.currentWage = toLoad.currentWage ?? 1;
+        data.doneKTL = !!toLoad.doneKTL;
+        data.doneAmulet = !!toLoad.doneAmulet;
+        data.displayJob = !!toLoad.displayJob;
+        data.focusSelected = toLoad.focusSelected ?? [];
+        data.resetLogs = toLoad.resetLogs ?? [];
+        data.planeUnlocked = toLoad.planeUnlocked ?? [true, false, false, false, false];
+        if (Array.isArray(data.planeUnlocked) && data.planeUnlocked.length === 4) {
+            data.planeUnlocked = [...data.planeUnlocked, false];
+        }
+        data.maxFocusAllowed = toLoad.maxFocusAllowed ?? 2;
+        data.lastVisit = toLoad.lastVisit ?? Date.now();
+        data.currentLog = toLoad.currentLog ?? [];
+        data.currentPinned = toLoad.currentPinned ?? [];
+        data.ancientCoinMultKTL = toLoad.ancientCoinMultKTL ?? 1;
+        data.ancientWhisperMultKTL = toLoad.ancientWhisperMultKTL ?? 1;
+        data.legacyMultKTL = toLoad.legacyMultKTL ?? 1;
+        data.resetCount = toLoad.resetCount ?? 1;
+        data.ancientCoinGained = toLoad.ancientCoinGained ?? 0;
+        data.ancientWhisperGained = toLoad.ancientWhisperGained ?? 0;
+        data.queuedReveals = toLoad.queuedReveals ?? {};
+        data.legacy = toLoad.legacy ?? 0;
+        data.lichKills = toLoad.lichKills ?? 0;
+        data.lichCoins = toLoad.lichCoins ?? 0;
+        data.highestLegacy = toLoad.highestLegacy ?? 0;
+        data.genesisPoints = toLoad.genesisPoints ?? 0;
+        data.genesisResets = toLoad.genesisResets ?? 0;
+        data.fightGenerated = toLoad.fightGenerated ?? 0;
+        data.soulCoins = toLoad.soulCoins ?? 0;
+        data.totalDailySoulCoins = toLoad.totalDailySoulCoins ?? 0;
+        data.totalBoughtSoulCoins = toLoad.totalBoughtSoulCoins ?? 0;
+
+        data.currentGameState = toLoad.currentGameState;
+        data.currentGameState.dailyTimer = toLoad.currentGameState.dailyTimer ?? 0;
+        data.currentGameState.dailyCharges = toLoad.currentGameState.dailyCharges ?? 0;
+
+        data.chartData = reverseExtractNestedSchema(toLoad.chartData, true) ?? [];
+
+        //data correction
+        if(toLoad.gameSettings.viewAdvancedSliders === undefined) { //defaults off on new saves
+            data.gameSettings.viewAdvancedSliders = true;
+        }
+
+        data.ls_times = toLoad.ls_times;
+
+        refundAmount += saveFileCorrection(saveVersionFromLoad)
+
+        data.ancientCoin += refundAmount;
+        applyUpgradeEffects()
+        adjustMagicMaxLevels()
+    }
+
+    //update all generator's multiplier data
+    for(let actionVar in actionData) {
+        let dataObj = actionData[actionVar];
+        if(dataObj.updateMults) {
+            dataObj.updateMults();
+        }
+    }
+
+    initializeDisplay();
+    adjustUIAfterLoad(toLoad, saveVersionFromLoad);
+    views.updateView();
+
+
+    for(let queuedLogMessage of queuedLogMessages) {
+        addLogMessage(queuedLogMessage[0], queuedLogMessage[1]);
+    }
+    saveFileCorrectionAfterLoad(saveVersionFromLoad);
+    debug(); //change game after all else, for easier debugging
+}
+
+const original_revealAction = revealAction;
+revealAction = function(actionVar) {
+    original_revealAction(actionVar);
+    if (actionVar === "prepareInfusion") {
+        updateFocusLines();
+    }
+    if (actionVar === "infuseBody") {
+        updateFocusLines();
+    }
+    if (actionVar === "infuseMind") {
+        updateFocusLines();
+    }
+    if (actionVar === "infuseMagic") {
+        updateFocusLines();
+    }
+}
+
+takeDataSnapshot = function(resourceValue, currentTime) {
+    if (currentTime <= 1) return;
+    if (data.chartData.length === 0) {
+        data.chartData.push({
+            time: currentTime,
+            value: resourceValue,
+            HATL: data.actions["hearAboutTheLich"].level,
+            MQ: actionData.awakenYourGrimoire.manaQuality()
+        });
+        return;
+    }
+
+    const lastStoredPoint = data.chartData[data.chartData.length - 1];
+    // if (resourceValue === lastStoredPoint.value) {
+    //     return;
+    // }
+
+    if ((currentTime - lastStoredPoint.time) > (currentTime > 3600 ? 119 : 19)) {
+        data.chartData.push({
+            time: currentTime,
+            value: resourceValue.toPrecision(4),
+            HATL: data.actions["hearAboutTheLich"].level,
+            MQ: actionData.awakenYourGrimoire.manaQuality()
+        });
+    }
+
+    if (data.chartData.length > 200) {
+        data.chartData.splice(0, 2);
+    }
+}
