@@ -241,7 +241,7 @@ const genesisPrio = [
 ];
 let autosetup = [[],[],[],[]];
 autosetup[0].push({type:"priority", list:earlypriority});
-autosetup[0].push({type:"reset", ac:0, hatl:4, momentum:1e33});
+autosetup[0].push({type:"reset", ac:0, hatl:4, momentum:1e35});
 autosetup[0].push({type:"reset", stage:2, hatl:7, mq:12, momentum:1e39});
 autosetup[0].push({type:"priority", ac:270, list:midpriority});
 autosetup[0].push({type:"reset", stage:3, hatl:10, mq:32, momentum:1e52});
@@ -249,23 +249,23 @@ autosetup[0].push({type:"reset", stage:5, hatl:10, mq:156, momentum:1e58});
 autosetup[0].push({type:"severance", action:"no"});
 
 autosetup[1].push({type:"priority", list:earlypriority});
-autosetup[1].push({type:"reset", ac:0, hatl:4});
-autosetup[1].push({type:"reset", stage:2, hatl:7, mq:6});
+autosetup[1].push({type:"reset", ac:0, hatl:4, momentum:1e35});
+autosetup[1].push({type:"reset", stage:2, hatl:7, mq:6, momentum:1e39});
 autosetup[1].push({type:"priority", ac:3350, list:midpriority});
 autosetup[1].push({type:"reset", stage:4, hatl:10, mq:99, momentum:1e48}); //99 108
 autosetup[1].push({type:"reset", stage:6, hatl:12, mq:270, momentum:1e64}); //360 486
 autosetup[1].push({type:"severance", action:"no"});
 
 autosetup[2].push({type:"priority", list:earlypriority});
-autosetup[2].push({type:"reset", ac:0, hatl:4});
-autosetup[2].push({type:"reset", stage:2, hatl:7, mq:6});
+autosetup[2].push({type:"reset", ac:0, hatl:4, momentum:1e35});
+autosetup[2].push({type:"reset", stage:2, hatl:7, mq:6, momentum:1e39});
 autosetup[2].push({type:"priority", ac:7000, list:midpriority});
 autosetup[2].push({type:"reset", stage:4, hatl:10, mq:99, momentum:1e48});
 autosetup[2].push({type:"reset", stage:6, hatl:13, mq:800, momentum:1e70}); //1365 1575
 autosetup[2].push({type:"severance", action:"no"});
 
 autosetup[3].push({type:"priority", list:earlypriority});
-autosetup[3].push({type:"reset", ac:0, hatl:4});
+autosetup[3].push({type:"reset", ac:0, hatl:4, momentum:1e35});
 autosetup[3].push({type:"reset", stage:2, hatl:7, mq:6, momentum:1e41});
 autosetup[3].push({type:"priority", ac:12325+150, list:midpriority});
 autosetup[3].push({type:"reset", stage:4, hatl:10, mq:99, momentum:1e48});
@@ -774,11 +774,11 @@ function printAWlvl(name) {
 /**
  * @param {number} stage
  * 1: MQ 2-4
- * 2: MQ 5?
- * 3: MQ 5-32
+ * 2: MQ 5-12
+ * 3: MQ 10-64 (80+)
  * 4: MQ 234
- * 5: MQ 165-408
- * 6: MQ 600+
+ * 5: MQ 330+ (760+)
+ * 6: MQ 448+
  * 7: MQ 1000-2142
  * 8: MQ 4000+
  * 100+: improveOverclockToFight lvl + 100
@@ -802,7 +802,7 @@ function check_stage(stage) {
         case 5:
             return check_u("improveMyGrimoire",3) && check_u("shapeMyMana",4) && check_u("useMyGrimoiresPower",2);
         case 6:
-            return check_u("improveMyGrimoire",3) && check_u("shapeMyMana",5) && check_u("useMoreComplexSpells",2);
+            return check_u("improveMyGrimoire",3) && check_u("shapeMyMana",5) && check_u("useMoreComplexSpells",1);
         case 7:
             return check_u("improveMyGrimoire",3) && check_u("shapeMyMana",7) && check_u("useMoreComplexSpells",2);
         case 8:
