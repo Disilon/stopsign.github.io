@@ -576,7 +576,7 @@ function createMenu() {
             <div class="menuTitle" style="box-sizing:border-box;">Options and Info Menu</div>
             <div class="menuSeparator" style="box-sizing:border-box;"></div>
             
-            <div style="display:flex;height:calc(var(--app-vh, 1vh) * 75 - 100px);min-height:0;position:relative;overflow:hidden;font-size:0;">
+            <div style="display:flex;height:calc(var(--app-vh, 1vh) * 90 - 100px);min-height:0;position:relative;overflow:hidden;font-size:0;">
                 <div id="menuIndexContainer" class="menuOptionContainer">
                 </div>
                 <div id="menuTextDisplayContainer" class="menuDisplayContainer">

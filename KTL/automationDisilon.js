@@ -180,17 +180,17 @@ const awList = [
     ["improveMyGrimoire", 2],
     ["shapeMyMana", 1],
     ["shapeMyMana", 2],
-    ["feelTheEchoesOfTheBurntTown", 2],
-    ["buyNicerStuff", 1],
     ["useMyGrimoiresPower", 1],
     ["useMyGrimoiresPower", 2],
     ["shapeMyMana", 3],
+    ["improveMyGrimoire", 3],
+    ["feelTheEchoesOfTheBurntTown", 2],
+    ["buyNicerStuff", 1],
     ["chatLongerWithAllies", 1],
     ["investMyCoins", 1],
     ["buyNicerStuff", 2],
     ["feelTheEchoesOfTheBurntTown", 3],
     ["feelTheEchoesOfTheBurntTown", 4],
-    ["improveMyGrimoire", 3],
     ["investMyCoins", 2],
     ["buyNicerStuff", 3],
     ["chatLongerWithAllies", 2],
@@ -215,63 +215,65 @@ const awList = [
     ["improveMyHouse", 2],
     // ["improveMyHouse", 3]
 ];
+const statsCycle = ["increaseResonance","increaseIntegration","increaseAmplification",
+    "increaseArchmagery","increaseAwareness","increaseConcentration","decreaseImpedance"];
 const genesisPrio = [
     { name: "increaseResonance", minLevel: 5, weight: 100 },
     { name: "increaseIntegration", minLevel: 40, weight: 250 },
     { name: "increaseAmplification", minLevel: 0, weight: 50 },
-    { name: "increaseArchmagery", minLevel: 0, weight: 60 },
+    { name: "increaseArchmagery", minLevel: 0, weight: 60*1.3 },
     { name: "increaseAwareness", minLevel: 15, weight: 160 },
     { name: "increaseConcentration", minLevel: 15, weight: 170 },
-    { name: "decreaseImpedance", minLevel: 15, weight: 50 },
+    { name: "decreaseImpedance", minLevel: 15, weight: 50*1.3 },
     { name: "extraDeathEnergy", minLevel: 9, weight: 532, show_diff: true },
-    { name: "extraSendRate", minLevel: 9, weight: 1000*0, show_diff: true },
-    { name: "extraConsumptionRate", minLevel: 9, weight: 1000*0, show_diff: true },
-    { name: "reduceResourcesConsumed", minLevel: 13, weight: 1800*0, show_diff: true },
-    { name: "extraMomentumGeneration", minLevel: 7, weight: 96, show_diff: true },
-    { name: "extraFortuneGeneration", minLevel: 0, weight: 0, show_diff: true },
+    { name: "extraSendRate", minLevel: 12, weight: 0, show_diff: true },
+    { name: "extraConsumptionRate", minLevel: 12, weight: 0, show_diff: true },
+    { name: "reduceResourcesConsumed", minLevel: 15, weight: 0, show_diff: true },
+    { name: "extraMomentumGeneration", minLevel: 9, weight: 0, show_diff: true },
+    { name: "extraFortuneGeneration", minLevel: 5, weight: 0, show_diff: true },
     { name: "extraFightGeneration", minLevel: 12, weight: 0 , show_diff: true},
-    { name: "extraGeneratorExp", minLevel: 10, weight: 676, show_diff: true },
-    { name: "extraAncientCoins", minLevel: 9, weight: 317, show_diff: true },
-    { name: "extraAncientWhispers", minLevel: 10, weight: 0, show_diff: true },
-    { name: "extraLegacy", minLevel: 8, weight: 367, show_diff: true },
-    { name: "extraBrythalLegacy", minLevel: 10, weight: 720, show_diff: true },
-    { name: "extraMarketCap", minLevel: 0, weight: 0, show_diff: true },
-    { name: "reducedUnlockCosts", minLevel: 4, weight: 100, show_diff: true },
-    { name: "higherSpeedCaps", minLevel: 5, weight: 891, show_diff: true }
+    { name: "extraGeneratorExp", minLevel: 13, weight: 0, show_diff: true },
+    { name: "extraAncientCoins", minLevel: 10, weight: 0, show_diff: true },
+    { name: "extraAncientWhispers", minLevel: 15, weight: 0, show_diff: true },
+    { name: "extraLegacy", minLevel: 10, weight: 0, show_diff: true },
+    { name: "extraBrythalLegacy", minLevel: 12, weight: 0, show_diff: true },
+    { name: "extraMarketCap", minLevel: 1, weight: 0, show_diff: false },
+    { name: "reducedUnlockCosts", minLevel: 5, weight: 0, show_diff: true },
+    { name: "higherSpeedCaps", minLevel: 5, weight: 0, show_diff: true }
 ];
 let autosetup = [[],[],[],[]];
 autosetup[0].push({type:"priority", list:earlypriority});
-autosetup[0].push({type:"reset", ac:0, hatl:4, momentum:1e35});
-autosetup[0].push({type:"reset", stage:2, hatl:7, mq:12, momentum:1e39});
+autosetup[0].push({type:"reset", ac:0, hatl:4, momentum:1e34});
+autosetup[0].push({type:"reset", stage:2, hatl:7, mq:12, momentum:1e38});
 autosetup[0].push({type:"priority", ac:270, list:midpriority});
-autosetup[0].push({type:"reset", stage:3, hatl:10, mq:32, momentum:1e52});
-autosetup[0].push({type:"reset", stage:5, hatl:10, mq:156, momentum:1e58});
+// autosetup[0].push({type:"reset", stage:3, hatl:10, mq:32, momentum:1e52});
+autosetup[0].push({type:"reset", stage:4, hatl:10, mq:156, momentum:1e56});
 autosetup[0].push({type:"severance", action:"no"});
 
 autosetup[1].push({type:"priority", list:earlypriority});
-autosetup[1].push({type:"reset", ac:0, hatl:4, momentum:1e35});
-autosetup[1].push({type:"reset", stage:2, hatl:7, mq:6, momentum:1e39});
+autosetup[1].push({type:"reset", ac:0, hatl:4, momentum:1e34});
+autosetup[1].push({type:"reset", stage:2, hatl:7, mq:6, momentum:1e38});
 autosetup[1].push({type:"priority", ac:3350, list:midpriority});
-autosetup[1].push({type:"reset", stage:4, hatl:10, mq:99, momentum:1e48}); //99 108
-autosetup[1].push({type:"reset", stage:6, hatl:12, mq:270, momentum:1e64}); //360 486
+// autosetup[1].push({type:"reset", stage:4, hatl:10, mq:99, momentum:1e48});
+autosetup[1].push({type:"reset", stage:5, hatl:12, mq:270, momentum:1e63});
 autosetup[1].push({type:"severance", action:"no"});
 
 autosetup[2].push({type:"priority", list:earlypriority});
-autosetup[2].push({type:"reset", ac:0, hatl:4, momentum:1e35});
-autosetup[2].push({type:"reset", stage:2, hatl:7, mq:6, momentum:1e39});
+autosetup[2].push({type:"reset", ac:0, hatl:4, momentum:1e34});
+// autosetup[2].push({type:"reset", stage:2, hatl:7, mq:6, momentum:1e39});
 autosetup[2].push({type:"priority", ac:7000, list:midpriority});
-autosetup[2].push({type:"reset", stage:4, hatl:10, mq:99, momentum:1e48});
-autosetup[2].push({type:"reset", stage:6, hatl:13, mq:800, momentum:1e70}); //1365 1575
+autosetup[2].push({type:"reset", stage:4, hatl:10, mq:99, momentum:1e47});
+autosetup[2].push({type:"reset", stage:6, hatl:13, mq:408, momentum:1e68});
 autosetup[2].push({type:"severance", action:"no"});
 
 autosetup[3].push({type:"priority", list:earlypriority});
-autosetup[3].push({type:"reset", ac:0, hatl:4, momentum:1e35});
-autosetup[3].push({type:"reset", stage:2, hatl:7, mq:6, momentum:1e41});
+autosetup[3].push({type:"reset", ac:0, hatl:4, momentum:1e34});
+// autosetup[3].push({type:"reset", stage:2, hatl:7, mq:6, momentum:1e41});
 autosetup[3].push({type:"priority", ac:12325+150, list:midpriority});
-autosetup[3].push({type:"reset", stage:4, hatl:10, mq:99, momentum:1e48});
+autosetup[3].push({type:"reset", stage:4, hatl:10, mq:99, momentum:1e47});
 autosetup[3].push({type:"priority", ac:27000, list:latepriority});
-autosetup[3].push({type:"reset", stage:6, hatl:13, mq:850, momentum:1e70});
-autosetup[3].push({type:"reset", stage:104, hatl:15, mq:4284, momentum:1e80, save_aw:true, specific:[{name:"newGamePlus",lvl:1}] }); //6804 7938
+// autosetup[3].push({type:"reset", stage:7, hatl:13, mq:408, momentum:1e68});
+autosetup[3].push({type:"reset", stage:7, hatl:15, mq:1470, momentum:1e77, save_aw:true, specific:[{name:"newGamePlus",lvl:1}] });
 
 let auto = {
     enabled: false,
@@ -287,7 +289,8 @@ let auto = {
     severance: "stop",
     previous_ac: 0,
     save_every_run: false,
-    stop_at_genesis: 2500
+    stop_at_genesis: 5000,
+    cycle_stat_weights: true
 };
 
 let next_auto= {};
@@ -334,8 +337,8 @@ function cycle_auto() {
             if (as.type === "reset") {
                 auto.stage = as.stage;
                 auto.goal_hatl = as.hatl;
-                auto.goal_mq = as.mq/Math.pow(1.18,data.upgrades.extraFightGeneration.upgradesBought-10);
-                auto.goal_mq = as.mq;
+                auto.goal_mq = as.mq/Math.pow(1.18,data.upgrades.extraFightGeneration.upgradesBought-12);
+                // auto.goal_mq = as.mq;
                 auto.goal_hope = as.hope;
                 auto.goal_legacy = as.legacy;
                 auto.goal_momentum = as.momentum;
@@ -633,7 +636,7 @@ function automationInfo() {
         previous AC goal: ${auto.previous_ac ?? "-"}<br>
         previous HATL goal: ${auto.goal_hatl ?? "-"}<br>
         previous MQ goal: ${auto.goal_mq ?? "-"}<br>
-        previous Legacy goal: ${auto.goal_legacy ?? "-"}<br>
+        previous momentum goal: ${auto.goal_momentum ?? "-"}<br>
         action on severance: ${auto.severance ?? "-"}<br>
         save every run: ${auto.save_every_run ?? "-"}
     `;
@@ -646,7 +649,7 @@ function automationInfo() {
         previous/next AC goal: ${auto.previous_ac ?? "-"} / ${next_auto.ac ?? "-"}<br>
         previous/next HATL goal: ${auto.goal_hatl ?? "-"} / ${next_auto.hatl ?? "-"}<br>
         previous/next MQ goal: ${auto.goal_mq ?? "-"} / ${next_auto.mq ?? "-"}<br>
-        previous/next Legacy goal: ${auto.goal_legacy ?? "-"} / ${next_auto.legacy ?? "-"}<br>
+        previous/next momentum goal: ${auto.goal_momentum ?? "-"} / ${next_auto.momentum ?? "-"}<br>
         action on severance: ${auto.severance ?? "-"}<br>
         save every run: ${auto.save_every_run ?? "-"}
     `;
@@ -827,6 +830,11 @@ function check_u(name, lvl) {
     return data.upgrades[name].upgradesBought >= lvl;
 }
 
+function getCyclicNumber(n) {
+    const tens = Math.floor(n / 10);
+    return tens % 10;
+}
+
 function optimizeUpgrades(upgradesList) {
     for (const upgrade of upgradesList) {
         const minLevel = upgrade.minLevel;
@@ -845,7 +853,11 @@ function optimizeUpgrades(upgradesList) {
             if (data.upgrades[upgrade.name].upgradesBought >= data.upgrades[upgrade.name].upgradesAvailable || !data.upgrades[upgrade.name].visible) continue;
             const cost = calcUpgradeCost(upgrade.name, data.upgrades[upgrade.name].upgradesBought);
             if (cost <= data.genesisPoints) {
-                const value = upgrade.weight / cost;
+                let value = upgrade.weight / cost;
+                const k = getCyclicNumber(data.genesisResets - 2490 + 1);
+                if (k < 7 && statsCycle[k] === upgrade.name) {
+                    value *= 1.2;
+                }
                 if (value > bestValue) {
                     bestValue = value;
                     bestUpgrade = upgrade;
@@ -900,4 +912,116 @@ function focusLine(from, to) {
         let borderId = `${select.from}_${select.to}_Line_Outer`;
         handleLineClick(borderId, select)
     }
+}
+
+function predictNW(fight = predictFight()) {
+        let actions = [
+            { name: "fightTheEvilForces", speed: 0.1, lvl_next:0 },
+            { name: "bridgeOfBone", speed: 0.1, consume: true, max: 10, lvl_next: 5,
+                progressMaxBase:10, progressMaxIncrease:1.5, expToLevelBase:5, unlockCost:5 },
+            { name: "harvestGhostlyField", speed: 0.1, consume: true, max: 10, lvl_next: 4,
+                progressMaxBase:50, progressMaxIncrease:1.5, expToLevelBase:5, unlockCost:100 },
+            { name: "geyserFields", speed: 0.1, consume: true, max: 10, lvl_next: 6,
+                progressMaxBase:500, progressMaxIncrease:2, expToLevelBase:5, unlockCost:1000 },
+            { name: "destroySiegeEngine", speed: 0.1, consume: true, max: 10, lvl_next: 5,
+                progressMaxBase:1e5, progressMaxIncrease:2, expToLevelBase:5, unlockCost:2e5 },
+            { name: "destroyEasternMonolith", speed: 0.01, consume: true, max: 3, lvl_next: 3,
+                progressMaxBase:3e10, progressMaxIncrease:15, expToLevelBase:1, unlockCost:1e7 },
+            { name: "stopDarknessRitual", speed: 0.01, consume: true, max: 10, lvl_next: 5,
+                progressMaxBase:2e12, progressMaxIncrease:2, expToLevelBase:5, unlockCost:2e8 },
+            { name: "protectTheSunstone", speed: 0.01, consume: true, max: 10,
+                progressMaxBase:2e14, progressMaxIncrease:2, expToLevelBase:5, unlockCost:2.5e9 },
+        ];
+    let worry = { progressMaxBase:2, expToLevelBase:1e4, expToLevelIncrease:10, actionPowerBase:5, actionPowerMultIncrease:1.3,
+        progress:0, exp: 0, power: 5, lvl: 0 };
+    let courage = { progressMaxBase:100, progressMaxIncrease:4, speed: 0.01, bravery:0, progress:0, lvl:0};
+    const fear = data.actions.hearAboutTheLich.resource;
+    const gen_exp = Math.pow(1.05, data.upgrades.extraGeneratorExp.upgradePower);
+    const unlock_mult = Math.pow(.9, data.upgrades.reducedUnlockCosts.upgradePower);
+    const speed_cap = 1 + data.upgrades.higherSpeedCaps.upgradePower * 0.1;
+    const consume = Math.pow(1.1, data.upgrades.extraConsumptionRate.upgradePower);
+    const send = Math.pow(1.1, data.upgrades.extraSendRate.upgradePower);
+    const drain = 1.0 - 0.05 * data.upgrades.reduceResourcesConsumed.upgradesBought;
+    const res_effect = data.actions.destroyEasternMonolith.attReductionEffect;
+    for (let i = 0; i < actions.length; i++) {
+        actions[i].lvl = 0;
+        actions[i].exp = 0;
+        actions[i].progress = 0;
+        if (actions[i].unlockCost) {
+            const u = data.actions[actions[i].name].unlockedCount;
+            actions[i].fight = -1 * actions[i].unlockCost * unlock_mult;
+            if (data.upgrades.recognizeTheFamiliarity.upgradePower > 0) {
+                actions[i].fight /= (1 + u * 0.04);
+            }
+        } else {
+            actions[i].fight = 0;
+        }
+        if (i >= 5) {
+            actions[i].progressMaxBase /= res_effect;
+        }
+    }
+    actions[0].fight = fight; //maybe add only 90% here?
+    courage.progressMaxBase /= data.actions.courage.attReductionEffect;
+    let hope = data.atts.hope.num;
+    let speed = Math.min(speed_cap, Math.pow(10, hope/100));
+    let t = 0;
+    while (hope >= -100) {
+        t++;
+        worry.progress += speed;
+        if (worry.progress > worry.progressMaxBase) {
+            worry.progress -= worry.progressMaxBase;
+            worry.exp += fear * speed * gen_exp;
+            worry.lvl = Math.floor(Math.log(worry.exp * (worry.expToLevelIncrease - 1) / worry.expToLevelBase + 1) / Math.log(worry.expToLevelIncrease));
+            worry.power = worry.actionPowerBase * Math.pow(worry.actionPowerMultIncrease, worry.lvl);
+            courage.bravery += worry.power * speed;
+        }
+        const c_d = courage.bravery * courage.speed * consume * speed;
+        courage.progress += c_d;
+        courage.bravery -= c_d * drain;
+        while (courage.progress > courage.progressMaxBase * Math.pow(courage.progressMaxIncrease, courage.lvl)) {
+            courage.progress -= courage.progressMaxBase * Math.pow(courage.progressMaxIncrease, courage.lvl);
+            courage.lvl++;
+            hope += 10;
+        }
+        speed = Math.min(speed_cap, Math.pow(10, hope/100));
+        for (let i = 0; i < actions.length; i++) {
+            let d = actions[i].fight * actions[i].speed * speed;
+            const d_max = actions[i].speed * speed * ((actions[i].lvl < actions[i].max ? consume : 0) + send);
+            if (d_max > 1) {
+                d /= d_max;
+            }
+            if (d > 0) {
+                if (actions[i].consume && actions[i].lvl < actions[i].max) {
+                    actions[i].progress += d * consume;
+                    actions[i].fight -= d * consume * drain;
+                    while (actions[i].progress > actions[i].progressMaxBase * Math.pow(actions[i].progressMaxIncrease, actions[i].lvl) &&
+                    actions[i].lvl < actions[i].max) {
+                        actions[i].progress -= actions[i].progressMaxBase * Math.pow(actions[i].progressMaxIncrease, actions[i].lvl);
+                        actions[i].exp++;
+                        if (actions[i].exp >= actions[i].expToLevelBase) {
+                            actions[i].exp = 0;
+                            actions[i].lvl++;
+                        }
+                    }
+                }
+                if (d > 0 && actions[i].lvl_next !== undefined && actions[i].lvl >= actions[i].lvl_next) {
+                    actions[i].fight -= d * send;
+                    actions[i+1].fight += d * send;
+                }
+            }
+        }
+
+        if (t%10 === 0) {
+            hope -= 10;
+        }
+    }
+    let result = [];
+    let j = 0;
+    for (let i = actions.length-1; i >= 0; i--) {
+        if (actions[i].consume && (actions[i].fight >= 0 || actions[i].lvl > 0)) {
+            result[j] = {name: actions[i].name, lvl:actions[i].lvl};
+            j++;
+        }
+    }
+    return result;
 }

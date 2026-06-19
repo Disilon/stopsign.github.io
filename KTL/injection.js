@@ -374,7 +374,8 @@ renderResetLog = function() {
                     ${log.stage1.mq ? intToString(log.stage1.mq, 1) : "-"} | 
                     ${log.stage1.resonance ?? "-"} | 
                     ${log.stage1.valor ?? "-"} | 
-                    ${log.stage1.currentAC ?? "-"}
+                    ${log.stage1.currentAC ?? "-"} | 
+                    ${log.stage1.fightPredicted ? intToString(log.stage1.fightPredicted, 1) : "-"}
                 </td>
                 <td style="">
                 ${log.stage2 ? `
@@ -395,7 +396,7 @@ renderResetLog = function() {
                     <tr>
                         <th style="padding-right:15px; text-align:left;">#</th>
                         <th style="padding-right:15px; text-align:left;">Stats<br>(Reset | Legacy)</th>
-                        <th style="padding-right:15px; text-align:left;">Stage 1<br>(Momentum | HATL | MQ | Resonance | Valor)</th>
+                        <th style="padding-right:15px; text-align:left;">Stage 1<br>(Momentum | HATL | MQ | Resonance | Valor | Fight Predicted)</th>
                         <th style="padding-right:15px; text-align:left;">Stage 2<br>(Fight Generated | Legacy Gained |<br> AC Gained | AW Gained)</th>
                     </tr>
                 </thead>
@@ -405,6 +406,21 @@ renderResetLog = function() {
             </table>
         </div>
     `;
+}
+
+function predictFight() {
+    const mq = actionData.awakenYourGrimoire.manaQuality();
+    const mult = Math.pow(1.2, data.upgrades.extraFightGeneration.upgradePower);
+    const eff = 1 / (1.01 - 0.05 * data.upgrades.reduceResourcesConsumed.upgradesBought);
+    const cost_exp = 2 - data.upgrades.improveOverclockToFight.upgradePower*.01;
+    const actionObj = data.actions.overclockTargetingTheLich;
+    const cost = actionObj.progressMaxBase / actionObj.attReductionEffect;
+    let level = Math.floor(Math.log(data.totalMomentum * eff * (cost_exp - 1) / cost + 1) / Math.log(cost_exp));
+    let fight = 0;
+    for (let i = 1; i <= level; i++) {
+        fight += Math.pow((1+i/10), 3) * mq * mult;
+    }
+    return fight;
 }
 
 logKTL = function() {
@@ -419,7 +435,8 @@ logKTL = function() {
             currentLegacy: data.legacy,
             resetCount: data.resetCount,
             currentMomentum: data.totalMomentum,
-            currentAC: calc_total_ac_worth()
+            currentAC: calc_total_ac_worth(),
+            fightPredicted: predictFight()
             // currentFear: data.actions.hearAboutTheLich.resource, //not in use
         },
         stage2: null
