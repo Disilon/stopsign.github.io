@@ -1,19 +1,99 @@
 //injection into original game code
 const original_gameTick = gameTick;
 gameTick = function() {
+    // const start = performance.now();
     original_gameTick();
     if (auto.enabled) {
         automate();
     }
+    // const end = performance.now();
+    // return end-start;
 }
 const original_loop = loop;
 loop = function() {
-    original_loop();
+    if (timerId !== null) clearTimeout(timerId);
+
+    const now = performance.now();
+    if (now - lastRealSecondTime >= 1000) {
+        realSecondPassed();
+        lastRealSecondTime += 1000;
+    }
+
+    if (lastTickTime === 0) lastTickTime = now;
+
+    const effectiveSpeed = data.gameSettings.gameSpeed * data.gameSettings.bonusSpeed;
+    const tickInterval = 1000 / data.gameSettings.ticksPerSecond / effectiveSpeed;
+    const maxElapsed = 2000; // ms (2 seconds max catch-up)
+    let elapsed = now - lastTickTime;
+    if (elapsed > maxElapsed) {
+        lastTickTime = now - maxElapsed;
+        elapsed = maxElapsed;
+    }
+
+    let ticksAvailable = Math.floor(elapsed / tickInterval);
+    let didSomething = false;
+
+    const maxTicksPerLoop = 800;
+    let ticksProcessed = Math.min(ticksAvailable, maxTicksPerLoop);
+
+    if (ticksAvailable > maxTicksPerLoop) {
+        const extraTicks = ticksAvailable - maxTicksPerLoop;
+        data.currentGameState.bonusTime += extraTicks * tickInterval * data.gameSettings.gameSpeed;
+    }
+
+    let min = 999;
+    let max = 0;
+    let sum = 0;
+    let counter = 0;
+
+    if (ticksProcessed > 0) {
+        lastTickTime += ticksProcessed * tickInterval;
+
+        const upgradeMultiplier = 1 + (data.shopUpgrades.extraGameSpeed.upgradePower * 0.1);
+        const exactTicks = (ticksProcessed * upgradeMultiplier) + (tickResidue || 0);
+        const totalTicksToRun = Math.floor(exactTicks);
+        tickResidue = exactTicks - totalTicksToRun;
+
+        if (!data.gameSettings.stop) {
+            for (let i = 0; i < totalTicksToRun; i++) {
+                didSomething = true;
+                const t = gameTick();
+                // counter++;
+                // sum += t;
+                // if (t > max) {
+                //     max = t;
+                // }
+                // if (t < min) {
+                //     min = t;
+                // }
+                if (data.gameSettings.ticksForSeconds >= data.gameSettings.ticksPerSecond) {
+                    data.gameSettings.ticksForSeconds = 0;
+                    secondPassed();
+                }
+            }
+            if (data.gameSettings.bonusSpeed > 1) {
+                const processedElapsed = ticksProcessed * tickInterval;
+                const bonusTimeConsumed = processedElapsed * (data.gameSettings.bonusSpeed - 1);
+                data.currentGameState.bonusTime -= bonusTimeConsumed;
+                if (data.currentGameState.bonusTime <= 0) {
+                    data.currentGameState.bonusTime = 0;
+                    data.gameSettings.bonusSpeed = 1;
+                }
+            }
+        } else {
+            data.currentGameState.bonusTime += tickInterval * ticksProcessed;
+        }
+        // postMessage({ type: 'update' });
+    }
+    // if (counter > 0) {
+    //     console.log(`${elapsed}: avg:${sum/counter} max:${max} min${min}`);
+    // }
     if (!data.gameSettings.stop) {
         if (data.gameState !== "KTL") {
             cycle_auto();
         }
     }
+    timerId = setTimeout(runMessage, 20);
 }
 
 updateUIOnLoad = function() {
@@ -374,7 +454,6 @@ renderResetLog = function() {
                     ${log.stage1.mq ? intToString(log.stage1.mq, 1) : "-"} | 
                     ${log.stage1.resonance ?? "-"} | 
                     ${log.stage1.valor ?? "-"} | 
-                    ${log.stage1.currentAC ?? "-"} | 
                     ${log.stage1.fightPredicted ? intToString(log.stage1.fightPredicted, 1) : "-"}
                 </td>
                 <td style="">
@@ -462,8 +541,8 @@ changeBonusSpeed = function(num) {
     data.options.bonusRate = num;
     if(data.gameSettings.bonusSpeed > 1) { //already running
         data.gameSettings.bonusSpeed = num;
-        checkTicksPerSecond();
     }
+    checkTicksPerSecond();
 }
 
 checkTicksPerSecond = function() {
@@ -471,7 +550,7 @@ checkTicksPerSecond = function() {
         if (data.options.bonusRate > 100) {
             data.gameSettings.ticksPerSecond = 1
         } else {
-            data.gameSettings.ticksPerSecond = 5
+            data.gameSettings.ticksPerSecond = 4
         }
     } else {
         data.gameSettings.ticksPerSecond = 20

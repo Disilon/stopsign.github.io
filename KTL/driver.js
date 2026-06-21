@@ -134,7 +134,7 @@ function gameTick() {
     }
 
     for (let actionVar in data.actions) {
-        tickGameObject(actionVar);
+        tickGameObject(actionVar); //resource-, progress+ and levelup
     }
 
     //process resource retrieval

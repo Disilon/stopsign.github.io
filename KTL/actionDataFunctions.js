@@ -452,7 +452,7 @@ function calculateDownstreamResources(actionVar) {
 }
 
 function calculateTaken(actionVar, shouldGive) {
-    let ratios = calculateDownstreamResources(actionVar);
+    let ratios = calculateDownstreamResources(actionVar); //check
 
     let toReturn = {};
     let actionObj = data.actions[actionVar];
